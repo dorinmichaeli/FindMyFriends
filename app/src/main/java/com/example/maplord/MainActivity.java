@@ -14,11 +14,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.maplord.databinding.ActivityMainBinding;
-import com.mapbox.maps.MapView;
-import com.mapbox.maps.Style;
 
 public class MainActivity extends AppCompatActivity {
-    private MapView mapView;
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
@@ -42,8 +39,6 @@ public class MainActivity extends AppCompatActivity {
                     .setAction("Action", null).show();
             }
         });
-        mapView = findViewById(R.id.mapView);
-        mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS);
     }
 
     @Override
@@ -51,29 +46,5 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
             || super.onSupportNavigateUp();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mapView.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mapView.onStop();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mapView.onLowMemory();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
     }
 }

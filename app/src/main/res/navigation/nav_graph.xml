@@ -15,6 +15,7 @@
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/SecondFragment"
         android:name="com.example.maplord.SecondFragment"
@@ -22,7 +23,19 @@
         tools:layout="@layout/fragment_second">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            android:id="@+id/action_SecondFragment_to_MapboxFragment"
+            app:destination="@id/MapboxFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/MapboxFragment"
+        android:name="com.example.maplord.MapboxFragment"
+        android:label="@string/mapbox_fragment_label"
+        tools:layout="@layout/fragment_mapbox">
+
+        <action
+            android:id="@+id/action_MapboxFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
+
 </navigation>
