@@ -9,4 +9,9 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <!-- Mapbox public key. -->
+    <string name="mapbox_access_token">
+        pk.eyJ1IjoiZG9yaW5taWNoYWVsaSIsImEiOiJjbGdjOTkyN2MxaDQ4M2pvNnRnZHZ5bTB3In0.MzwD06EklMmKoV2IAOH3xQ
+    </string>
 </resources>
