@@ -17,3 +17,14 @@ Secret access token:
 ```
 sk.eyJ1IjoiZG9yaW5taWNoYWVsaSIsImEiOiJjbGdjZDJ1Y3QwMThuM2hsZWt3MDdzYW1zIn0.fYflhkOpOYREpWdTXwP1CQ
 ```
+
+### API reference:
+
+[Link](https://docs.mapbox.com/android/maps/api/10.12.1/)
+
+### About plugins
+
+Whenever some code example mentions MapBox "plugins", it probably uses the old API (v9).  
+In the newer API (v10) the plugins are now part of the core API.
+
+[Link](https://docs.mapbox.com/android/maps/guides/#mapbox-android-plugins)

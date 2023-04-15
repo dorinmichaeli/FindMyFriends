@@ -1,13 +1,19 @@
 <resources>
     <string name="app_name">MapLord</string>
     <string name="title_activity_main">MainActivity</string>
-    <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="mapbox_fragment_label">Mapbox Fragment</string>
     <string name="next">Next</string>
     <string name="go_to_mapbox">View Mapbox</string>
     <string name="back_to_start">Back to start</string>
+    <string name="location_permission_denied_exit_title">
+        App will now close!
+    </string>
+    <string name="location_permission_denied_exit_message">
+        This app requires location permission to work. If you want to use this
+        app then start it again and grant it access to location.
+    </string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
@@ -16,4 +22,5 @@
     <string name="mapbox_access_token">
         pk.eyJ1IjoiZG9yaW5taWNoYWVsaSIsImEiOiJjbGdjOTkyN2MxaDQ4M2pvNnRnZHZ5bTB3In0.MzwD06EklMmKoV2IAOH3xQ
     </string>
+    <string name="mapbox_red_marker_scale">0.4</string>
 </resources>
