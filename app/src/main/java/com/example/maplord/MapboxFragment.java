@@ -26,9 +26,13 @@ import com.mapbox.maps.plugin.annotation.AnnotationPlugin;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions;
 
+import com.mapbox.maps.plugin.gestures.GesturesPlugin;
+import com.mapbox.maps.plugin.gestures.GesturesUtils;
+
 public class MapboxFragment extends Fragment {
-    private MapView mapView;
     private FragmentMapboxBinding binding;
+    private MapView mapView;
+    private PointAnnotationManager pointAnnotationManager;
 
     public static MapboxFragment newInstance() {
         return new MapboxFragment();
@@ -41,7 +45,7 @@ public class MapboxFragment extends Fragment {
         @Nullable Bundle savedInstanceState
     ) {
         binding = FragmentMapboxBinding.inflate(inflater, container, false);
-        initMapView();
+        initMapbox();
         return binding.getRoot();
     }
 
@@ -53,11 +57,31 @@ public class MapboxFragment extends Fragment {
             NavHostFragment.findNavController(MapboxFragment.this)
                 .navigate(R.id.action_MapboxFragment_to_FirstFragment);
         });
+
+        // Add a marker on the map wherever a user clicks.
+        GesturesPlugin gesturesPlugin = GesturesUtils.getGestures(mapView);
+        gesturesPlugin.addOnMapClickListener(point -> {
+            addMarkerAt(point);
+            return true;
+        });
     }
 
-    private void initMapView() {
+    private void initMapbox() {
+        // Cache the mapView element.
         mapView = binding.mapView;
 
+        // Create the Point Annotation Manager that we'll use for
+        // creating, deleting, and interacting with the markers.
+        AnnotationPlugin annotationPlugin = mapView.getPlugin(Plugin.MAPBOX_ANNOTATION_PLUGIN_ID);
+        assert annotationPlugin != null;
+        pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationPlugin, (AnnotationConfig) null);
+        // Delete a marker when a user clicks on it.
+        pointAnnotationManager.addClickListener(annotation -> {
+            pointAnnotationManager.delete(annotation);
+            return true;
+        });
+
+        // Load the map style.
         MapboxMap map = mapView.getMapboxMap();
         map.loadStyleUri(Style.MAPBOX_STREETS);
 
@@ -69,10 +93,6 @@ public class MapboxFragment extends Fragment {
     }
 
     private void addMarkerAt(Point point) {
-        AnnotationPlugin annotationPlugin = mapView.getPlugin(Plugin.MAPBOX_ANNOTATION_PLUGIN_ID);
-        assert annotationPlugin != null;
-        PointAnnotationManager pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationPlugin, (AnnotationConfig) null);
-
         Drawable markerSource = AppCompatResources.getDrawable(requireContext(), R.drawable.red_marker);
         assert markerSource != null;
         assert markerSource instanceof BitmapDrawable;
@@ -91,6 +111,7 @@ public class MapboxFragment extends Fragment {
             .zoom(zoom)
             .center(point)
             .build();
+
         map.setCamera(camera);
     }
 }
