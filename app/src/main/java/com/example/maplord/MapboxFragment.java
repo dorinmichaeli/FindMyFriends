@@ -227,14 +227,14 @@ public class MapboxFragment extends Fragment {
     resolveCall(call, (call1, response, err) -> {
       // TODO: How to handle errors in communication with the server?
       if (err != null) {
-        ErrorDialog.fatalError(getActivity(), "Error while sending list markers request: " + err);
+        ErrorDialog.fatalError(getActivity(), "Error while sending create marker request: " + err);
         return;
       }
       // lat: ValidatorError: Path `lat` is required.
       // lon: ValidatorError: Path `lon` is required
       if (!response.isSuccessful()) {
         try (ResponseBody errBody = response.errorBody()) {
-          ErrorDialog.fatalError(getActivity(), "Error while receiving list markers response: " + errBody);
+          ErrorDialog.fatalError(getActivity(), "Error while receiving create marker response: " + errBody);
         }
         return;
       }
@@ -255,12 +255,12 @@ public class MapboxFragment extends Fragment {
     resolveCall(call, (call1, response, err) -> {
       // TODO: How to handle errors in communication with the server?
       if (err != null) {
-        ErrorDialog.fatalError(getActivity(), "Error while sending list markers request: " + err);
+        ErrorDialog.fatalError(getActivity(), "Error while sending delete marker request: " + err);
         return;
       }
       if (!response.isSuccessful()) {
         try (ResponseBody errBody = response.errorBody()) {
-          ErrorDialog.fatalError(getActivity(), "Error while receiving list markers response: " + errBody);
+          ErrorDialog.fatalError(getActivity(), "Error while receiving delete marker response: " + errBody);
         }
         return;
       }
