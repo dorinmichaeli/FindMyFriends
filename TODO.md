@@ -8,5 +8,5 @@
 ## Current
 
 - (DONE) Add error handling to the app.
-- Add a loader to the app.
 - Organize the code in the app.
+- Add a loader to the app.
