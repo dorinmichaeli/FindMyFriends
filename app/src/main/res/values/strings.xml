@@ -7,7 +7,7 @@
     <string name="next">Next</string>
     <string name="go_to_mapbox">View Mapbox</string>
     <string name="back_to_start">Back to start</string>
-    <string name="location_permission_denied_exit_title">
+    <string name="fatal_error_exit_title">
         App will now close!
     </string>
     <string name="location_permission_denied_exit_message">
