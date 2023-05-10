@@ -55,10 +55,6 @@ public class MapboxFragment extends Fragment {
   // marker's id in order to delete it from the server.
   private final HashMap<PointAnnotation, MapLordApi.MarkerInfo> markerMap = new HashMap<>();
 
-  public static MapboxFragment newInstance() {
-    return new MapboxFragment();
-  }
-
   @Override
   public View onCreateView(
     @NonNull LayoutInflater inflater,
