@@ -1,4 +1,4 @@
-package com.example.maplord;
+package com.example.maplord.api;
 
 import com.mapbox.geojson.Point;
 

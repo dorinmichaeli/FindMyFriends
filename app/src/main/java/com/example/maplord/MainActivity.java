@@ -1,6 +1,8 @@
 package com.example.maplord;
 
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -10,9 +12,11 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -51,9 +55,7 @@ public class MainActivity extends AppCompatActivity {
       },
       result -> {
         Boolean fineLocationGranted = result.getOrDefault(android.Manifest.permission.ACCESS_FINE_LOCATION, false);
-        if (fineLocationGranted != null && fineLocationGranted) {
-          onLocationPermissionGranted();
-        } else {
+        if (fineLocationGranted == null || !fineLocationGranted) {
           onLocationPermissionRefused();
         }
       }
@@ -67,14 +69,22 @@ public class MainActivity extends AppCompatActivity {
       || super.onSupportNavigateUp();
   }
 
-  @SuppressLint("MissingPermission")
-  private void onLocationPermissionGranted() {
+  public LiveData<Location> getLastKnownLocation() {
+    MutableLiveData<Location> data = new MutableLiveData<>();
+
+    if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+      && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+      onLocationPermissionRefused();
+    }
+
     fusedLocationClient
       .getLastLocation()
       .addOnSuccessListener(this, location -> {
         // TODO: Do something with the location.
-        System.out.println("Location: " + location);
+        data.setValue(location);
       });
+
+    return data;
   }
 
   private void onLocationPermissionRefused() {
@@ -85,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
     // permission.
 
     // See: https://developer.android.com/develop/ui/views/components/dialogs#AlertDialog
-
     ErrorDialog.fatalError(this, getString(R.string.location_permission_denied_exit_message));
   }
 
