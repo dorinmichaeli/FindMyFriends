@@ -1,18 +1,14 @@
 package com.example.maplord;
 
-import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
@@ -23,7 +19,6 @@ import com.example.maplord.databinding.FragmentMapboxBinding;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mapbox.maps.plugin.Plugin;
-import com.mapbox.maps.plugin.annotation.Annotation;
 import com.mapbox.maps.plugin.annotation.AnnotationConfig;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotation;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManagerKt;
