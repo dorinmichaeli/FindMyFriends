@@ -8,5 +8,7 @@
 ## Current
 
 - (DONE) Add error handling to the app.
-- (PARTIALLY DONE) Organize the code in the app.
-- Add a loader to the app.
+- (DONE) Organize the code in the app.
+- (DONE) Add a loader to the app.
+- Find out how to perform dependency injection on fragments without throwing everything on the
+  MainActivity class.

@@ -3,8 +3,10 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
+    <string name="loader_fragment_label">Loader Fragment</string>
     <string name="mapbox_fragment_label">Mapbox Fragment</string>
     <string name="next">Next</string>
+    <string name="loading_data">Loading data, please wait…</string>
     <string name="go_to_mapbox">View Mapbox</string>
     <string name="back_to_start">Back to start</string>
     <string name="fatal_error_exit_title">

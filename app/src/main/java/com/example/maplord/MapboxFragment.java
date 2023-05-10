@@ -18,8 +18,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.maplord.api.MapLordApi;
 import com.example.maplord.api.MapLordModel;
 import com.example.maplord.databinding.FragmentMapboxBinding;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mapbox.maps.plugin.Plugin;
 import com.mapbox.maps.plugin.annotation.AnnotationConfig;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotation;
@@ -37,16 +35,14 @@ import com.mapbox.maps.plugin.gestures.GesturesPlugin;
 import com.mapbox.maps.plugin.gestures.GesturesUtils;
 
 import java.util.HashMap;
-
-import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import java.util.List;
 
 public class MapboxFragment extends Fragment {
   private FragmentMapboxBinding binding;
   private MapView mapView;
   private PointAnnotationManager pointAnnotationManager;
-  private MapLordModel model;
+  private MapLordModel apiModel;
+
   // We use this map to find the marker info for a given annotation.
   // This is used when deleting an annotation, as we need to know the
   // marker's id in order to delete it from the server.
@@ -58,9 +54,9 @@ public class MapboxFragment extends Fragment {
     @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState
   ) {
-    // TODO: Where's the best place to initialize the API?
-    MapLordApi api = createMapLordApi();
-    model = new MapLordModel(api, getActivity());
+    MainActivity mainActivity = (MainActivity) getActivity();
+    assert mainActivity != null;
+    apiModel = mainActivity.getApiModel();
 
     binding = FragmentMapboxBinding.inflate(inflater, container, false);
     mapView = binding.mapView;
@@ -106,7 +102,7 @@ public class MapboxFragment extends Fragment {
       MapLordApi.MarkerInfo markerInfo = markerMap.get(annotation);
       assert markerInfo != null;
       // Delete the marker in the API.
-      LiveData<MapLordApi.MarkerDeletionResult> deletionResult = model.apiDeleteMarker(markerInfo);
+      LiveData<MapLordApi.MarkerDeletionResult> deletionResult = apiModel.apiDeleteMarker(markerInfo);
       // Delete the equivalent annotation in MapBox.
       deletionResult.observe(getViewLifecycleOwner(), result -> {
         // Only delete if the server has deleted the marker.
@@ -125,29 +121,29 @@ public class MapboxFragment extends Fragment {
   private void initCameraLocation() {
     MainActivity mainActivity = (MainActivity) getActivity();
     assert mainActivity != null;
-    LiveData<Location> locationData = mainActivity.getLastKnownLocation();
 
-    locationData.observe(getViewLifecycleOwner(), location -> {
-      Point newCameraLocation = Point.fromLngLat(location.getLongitude(), location.getLatitude());
-      MapboxMap map = mapView.getMapboxMap();
-      double cameraZoom = ResourceTools.getDouble(this, R.string.mapbox_default_camera_zoom);
-      moveCameraTo(map, newCameraLocation, cameraZoom);
-    });
+    Location location = mainActivity.getLastKnownLocation();
+    Point newCameraLocation = Point.fromLngLat(location.getLongitude(), location.getLatitude());
+    MapboxMap map = mapView.getMapboxMap();
+    double cameraZoom = ResourceTools.getDouble(this, R.string.mapbox_default_camera_zoom);
+    moveCameraTo(map, newCameraLocation, cameraZoom);
   }
 
   private void initPreExistingMarkers() {
-    model.apiListMarkers().observe(getViewLifecycleOwner(), markerList -> {
-      for (MapLordApi.MarkerInfo marker : markerList) {
-        createAnnotationForMarker(marker);
-      }
-    });
+    MainActivity mainActivity = (MainActivity) getActivity();
+    assert mainActivity != null;
+
+    List<MapLordApi.MarkerInfo> markerList = mainActivity.getPreExistingMarkers();
+    for (MapLordApi.MarkerInfo marker : markerList) {
+      createAnnotationForMarker(marker);
+    }
   }
 
   private void initCreateMarkerOnClick() {
     // Add a marker on the map wherever a user clicks.
     GesturesPlugin gesturesPlugin = GesturesUtils.getGestures(mapView);
     gesturesPlugin.addOnMapClickListener(point -> {
-      LiveData<MapLordApi.MarkerInfo> createdMarkerInfo = model.apiCreateMarker(point);
+      LiveData<MapLordApi.MarkerInfo> createdMarkerInfo = apiModel.apiCreateMarker(point);
       createdMarkerInfo.observe(getViewLifecycleOwner(), marker -> {
         createAnnotationForMarker(marker);
       });
@@ -178,24 +174,5 @@ public class MapboxFragment extends Fragment {
       .build();
 
     map.setCamera(camera);
-  }
-
-  private static MapLordApi createMapLordApi() {
-    Gson gson = new GsonBuilder()
-      .create();
-
-    OkHttpClient client = new OkHttpClient.Builder()
-      .build();
-
-    Retrofit retrofit = new Retrofit.Builder()
-      // TODO: Export the URL to a resource file or whatever?
-      .baseUrl("http://maplord.api:3000")
-      .client(client)
-      .addConverterFactory(GsonConverterFactory.create(gson))
-      .build();
-
-    MapLordApi api = retrofit.create(MapLordApi.class);
-
-    return api;
   }
 }
