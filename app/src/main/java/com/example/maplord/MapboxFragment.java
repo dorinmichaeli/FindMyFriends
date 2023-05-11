@@ -35,7 +35,6 @@ import com.mapbox.maps.plugin.gestures.GesturesPlugin;
 import com.mapbox.maps.plugin.gestures.GesturesUtils;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class MapboxFragment extends Fragment {
   private FragmentMapboxBinding binding;
@@ -127,10 +126,9 @@ public class MapboxFragment extends Fragment {
   }
 
   private void initPreExistingMarkers() {
-    MainActivity mainActivity = (MainActivity) getActivity();
-    assert mainActivity != null;
+    MapLordModel model = MapLordApp.get(this).getApiModel();
 
-    List<MapLordApi.MarkerInfo> markerList = mainActivity.getPreExistingMarkers();
+    var markerList = model.getPreExistingMarkers();
     for (MapLordApi.MarkerInfo marker : markerList) {
       createAnnotationForMarker(marker);
     }

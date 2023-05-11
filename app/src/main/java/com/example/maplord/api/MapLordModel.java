@@ -16,22 +16,23 @@ import retrofit2.Response;
 public class MapLordModel {
   private final MapLordApi api;
   private final ErrorDialog errorDialog;
+  private List<MapLordApi.MarkerInfo> preExistingMarkers = null;
 
   public MapLordModel(MapLordApi api, ErrorDialog errorDialog) {
     this.api = api;
     this.errorDialog = errorDialog;
   }
 
-  public LiveData<List<MapLordApi.MarkerInfo>> apiListMarkers() {
-    MutableLiveData<List<MapLordApi.MarkerInfo>> data = new MutableLiveData<>();
+  public LiveData<Boolean> updatePreExistingMarkers() {
+    var data = new MutableLiveData<>(false);
 
     Call<List<MapLordApi.MarkerInfo>> call = api.listAllMarkers();
     resolveCall(call, (call1, response, err) -> {
-      // TODO: How to handle errors in communication with the server?
       if (err != null) {
         errorDialog.fatalError("Error while sending list markers request: " + err);
         return;
       }
+
       if (!response.isSuccessful()) {
         try (ResponseBody errBody = response.errorBody()) {
           errorDialog.fatalError("Error while receiving list markers response: " + errBody);
@@ -41,10 +42,16 @@ public class MapLordModel {
 
       List<MapLordApi.MarkerInfo> markerList = response.body();
       assert markerList != null;
-      data.setValue(markerList);
+      preExistingMarkers = markerList;
+      data.setValue(true);
     });
 
     return data;
+  }
+
+  public List<MapLordApi.MarkerInfo> getPreExistingMarkers() {
+    assert preExistingMarkers != null;
+    return preExistingMarkers;
   }
 
   public LiveData<MapLordApi.MarkerInfo> apiCreateMarker(Point point) {
@@ -54,23 +61,21 @@ public class MapLordModel {
       = new MapLordApi.MarkerCreationRequest(point);
     Call<MapLordApi.MarkerInfo> call = api.createMarker(creationRequest);
     resolveCall(call, (call1, response, err) -> {
-      // TODO: How to handle errors in communication with the server?
       if (err != null) {
         errorDialog.fatalError("Error while sending create marker request: " + err);
         return;
       }
-      // lat: ValidatorError: Path `lat` is required.
-      // lon: ValidatorError: Path `lon` is required
+
       if (!response.isSuccessful()) {
         try (ResponseBody errBody = response.errorBody()) {
           errorDialog.fatalError("Error while receiving create marker response: " + errBody);
         }
         return;
       }
+
       MapLordApi.MarkerInfo createdMarkerInfo = response.body();
       assert createdMarkerInfo != null;
       data.setValue(createdMarkerInfo);
-      //addMarkerAt(createdMarkerInfo);
     });
 
     return data;
@@ -84,11 +89,11 @@ public class MapLordModel {
     deletionRequest.id = markerInfo.id;
     Call<MapLordApi.MarkerDeletionResult> call = api.deleteMarker(deletionRequest);
     resolveCall(call, (call1, response, err) -> {
-      // TODO: How to handle errors in communication with the server?
       if (err != null) {
         errorDialog.fatalError("Error while sending delete marker request: " + err);
         return;
       }
+
       if (!response.isSuccessful()) {
         try (ResponseBody errBody = response.errorBody()) {
           errorDialog.fatalError("Error while receiving delete marker response: " + errBody);
@@ -105,7 +110,7 @@ public class MapLordModel {
   }
 
   private static <T> void resolveCall(Call<T> call, CallFinished<T> onCallFinished) {
-    call.enqueue(new Callback<T>() {
+    call.enqueue(new Callback<>() {
       @Override
       public void onResponse(Call<T> call, Response<T> response) {
         onCallFinished.apply(call, response, null);

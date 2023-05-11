@@ -11,17 +11,17 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.maplord.api.MapLordModel;
 import com.example.maplord.databinding.FragmentLoaderBinding;
 
 public class LoaderFragment extends Fragment {
-  private FragmentLoaderBinding binding;
   private boolean locationUpdated = false;
   private boolean markerListLoaded = false;
 
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    binding = FragmentLoaderBinding.inflate(inflater, container, false);
+    FragmentLoaderBinding binding = FragmentLoaderBinding.inflate(inflater, container, false);
     return binding.getRoot();
   }
 
@@ -47,10 +47,9 @@ public class LoaderFragment extends Fragment {
   }
 
   private void startLoadingPreExistingMarkers() {
-    MainActivity mainActivity = (MainActivity) getActivity();
-    assert mainActivity != null;
+    MapLordModel model = MapLordApp.get(this).getApiModel();
 
-    LiveData<Boolean> markersUpdated = mainActivity.updatePreExistingMarkers();
+    LiveData<Boolean> markersUpdated = model.updatePreExistingMarkers();
     markersUpdated.observe(getViewLifecycleOwner(), updated -> {
       if (!updated) {
         return;

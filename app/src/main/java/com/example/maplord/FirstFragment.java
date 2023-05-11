@@ -12,36 +12,30 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.maplord.databinding.FragmentFirstBinding;
 
 public class FirstFragment extends Fragment {
+  private FragmentFirstBinding binding;
 
-    private FragmentFirstBinding binding;
+  @Override
+  public View onCreateView(
+    LayoutInflater inflater,
+    ViewGroup container,
+    Bundle savedInstanceState
+  ) {
+    binding = FragmentFirstBinding.inflate(inflater, container, false);
+    return binding.getRoot();
+  }
 
-    @Override
-    public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
-    ) {
+  public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
 
-        binding = FragmentFirstBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+    binding.buttonFirst.setOnClickListener(view1 -> {
+      NavHostFragment.findNavController(FirstFragment.this)
+        .navigate(R.id.action_FirstFragment_to_SecondFragment);
+    });
+  }
 
-    }
-
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(FirstFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
-            }
-        });
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    binding = null;
+  }
 }
