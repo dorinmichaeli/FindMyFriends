@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.maplord.api.MapLordApi;
 import com.example.maplord.api.MapLordModel;
+import com.example.maplord.services.ErrorDialog;
+import com.example.maplord.services.LocationService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -18,20 +20,25 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MapLordApp extends Application {
+  private Activity currentActivity;
+
+  // Services
   private ErrorDialog errorDialog;
   private MapLordModel apiModel;
-  private Activity currentActivity;
+  private LocationService locationService;
 
   @Override
   public void onCreate() {
     super.onCreate();
+
+    initActivityTracking();
 
     errorDialog = new ErrorDialog(this);
 
     MapLordApi api = createMapLordApi();
     apiModel = new MapLordModel(api, errorDialog);
 
-    initActivityTracking();
+    locationService = new LocationService(this);
   }
 
   public Activity getCurrentActivity() {
@@ -45,6 +52,10 @@ public class MapLordApp extends Application {
 
   public MapLordModel getApiModel() {
     return apiModel;
+  }
+
+  public LocationService getLocationService() {
+    return locationService;
   }
 
   private void initActivityTracking() {

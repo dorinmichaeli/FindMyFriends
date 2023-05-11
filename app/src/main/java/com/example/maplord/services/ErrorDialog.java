@@ -1,6 +1,9 @@
-package com.example.maplord;
+package com.example.maplord.services;
 
 import androidx.appcompat.app.AlertDialog;
+
+import com.example.maplord.MapLordApp;
+import com.example.maplord.R;
 
 public class ErrorDialog {
   private final MapLordApp app;

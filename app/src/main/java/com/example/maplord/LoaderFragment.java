@@ -11,8 +11,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.maplord.api.MapLordApi;
-import com.example.maplord.api.MapLordModel;
 import com.example.maplord.databinding.FragmentLoaderBinding;
 
 public class LoaderFragment extends Fragment {
@@ -36,10 +34,9 @@ public class LoaderFragment extends Fragment {
   }
 
   private void startLoadingLastKnownLocation() {
-    MainActivity mainActivity = (MainActivity) getActivity();
-    assert mainActivity != null;
+    var locationService = MapLordApp.get(this).getLocationService();
 
-    LiveData<Boolean> locationUpdated = mainActivity.updateLastKnownLocation();
+    LiveData<Boolean> locationUpdated = locationService.updateLastKnownLocation();
     locationUpdated.observe(getViewLifecycleOwner(), updated -> {
       if (!updated) {
         return;

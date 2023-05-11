@@ -117,10 +117,9 @@ public class MapboxFragment extends Fragment {
   }
 
   private void initCameraLocation() {
-    MainActivity mainActivity = (MainActivity) getActivity();
-    assert mainActivity != null;
+    var locationService = MapLordApp.get(this).getLocationService();
 
-    Location location = mainActivity.getLastKnownLocation();
+    Location location = locationService.getLastKnownLocation();
     Point newCameraLocation = Point.fromLngLat(location.getLongitude(), location.getLatitude());
     MapboxMap map = mapView.getMapboxMap();
     double cameraZoom = ResourceTools.getDouble(this, R.string.mapbox_default_camera_zoom);

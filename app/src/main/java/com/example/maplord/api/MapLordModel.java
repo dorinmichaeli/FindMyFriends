@@ -1,11 +1,9 @@
 package com.example.maplord.api;
 
-import android.app.Activity;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.maplord.ErrorDialog;
+import com.example.maplord.services.ErrorDialog;
 import com.mapbox.geojson.Point;
 
 import java.util.List;
