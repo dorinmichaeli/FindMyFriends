@@ -18,6 +18,8 @@
   marker. For example each marker should have a name above it, or a unique per-user color.
 - Chat room with other users in your group.
 - See live locations of all users in your group.
+- Think about how we can emulate/simulate multiple devices for field testing. Do we need to get
+  multiple old Android devices or something?
 
 ## Research
 
