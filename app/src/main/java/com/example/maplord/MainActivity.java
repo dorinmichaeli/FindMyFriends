@@ -2,6 +2,7 @@ package com.example.maplord;
 
 import android.os.Bundle;
 
+import com.example.maplord.services.LocationService;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,9 +17,14 @@ import com.example.maplord.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
   private AppBarConfiguration appBarConfiguration;
 
+  // Dependencies.
+  private LocationService locationService;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    locationService = MapLordApp.get(this).getLocationService();
 
     ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
     setContentView(binding.getRoot());
@@ -32,9 +38,11 @@ public class MainActivity extends AppCompatActivity {
     binding.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
       .setAction("Action", null).show());
 
-    MapLordApp.get(this)
-      .getLocationService()
-      .requestLocationPermissions(this);
+    requestAppPermissions();
+  }
+
+  private void requestAppPermissions() {
+    locationService.requestLocationPermissions(this);
   }
 
   @Override

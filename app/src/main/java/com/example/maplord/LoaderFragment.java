@@ -11,16 +11,24 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.maplord.api.MapLordModel;
+import com.example.maplord.services.LocationService;
 import com.example.maplord.databinding.FragmentLoaderBinding;
+import com.example.maplord.services.MapLordApiService;
 
 public class LoaderFragment extends Fragment {
   private boolean locationUpdated = false;
   private boolean markerListLoaded = false;
 
+  // Dependencies.
+  private MapLordApiService apiService;
+  private LocationService locationService;
+
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    apiService = MapLordApp.get(this).getApiService();
+    locationService = MapLordApp.get(this).getLocationService();
+
     FragmentLoaderBinding binding = FragmentLoaderBinding.inflate(inflater, container, false);
     return binding.getRoot();
   }
@@ -34,8 +42,6 @@ public class LoaderFragment extends Fragment {
   }
 
   private void startLoadingLastKnownLocation() {
-    var locationService = MapLordApp.get(this).getLocationService();
-
     LiveData<Boolean> locationUpdated = locationService.updateLastKnownLocation();
     locationUpdated.observe(getViewLifecycleOwner(), updated -> {
       if (!updated) {
@@ -47,9 +53,7 @@ public class LoaderFragment extends Fragment {
   }
 
   private void startLoadingPreExistingMarkers() {
-    MapLordModel model = MapLordApp.get(this).getApiModel();
-
-    LiveData<Boolean> markersUpdated = model.updatePreExistingMarkers();
+    LiveData<Boolean> markersUpdated = apiService.updatePreExistingMarkers();
     markersUpdated.observe(getViewLifecycleOwner(), updated -> {
       if (!updated) {
         return;

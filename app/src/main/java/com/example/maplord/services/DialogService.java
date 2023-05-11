@@ -5,10 +5,10 @@ import androidx.appcompat.app.AlertDialog;
 import com.example.maplord.MapLordApp;
 import com.example.maplord.R;
 
-public class ErrorDialog {
+public class DialogService {
   private final MapLordApp app;
 
-  public ErrorDialog(MapLordApp app) {
+  public DialogService(MapLordApp app) {
     this.app = app;
   }
 

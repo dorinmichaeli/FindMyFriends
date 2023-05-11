@@ -16,7 +16,8 @@ import androidx.lifecycle.LiveData;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.maplord.api.MapLordApi;
-import com.example.maplord.api.MapLordModel;
+import com.example.maplord.services.LocationService;
+import com.example.maplord.services.MapLordApiService;
 import com.example.maplord.databinding.FragmentMapboxBinding;
 import com.mapbox.maps.plugin.Plugin;
 import com.mapbox.maps.plugin.annotation.AnnotationConfig;
@@ -40,7 +41,10 @@ public class MapboxFragment extends Fragment {
   private FragmentMapboxBinding binding;
   private MapView mapView;
   private PointAnnotationManager pointAnnotationManager;
-  private MapLordModel apiModel;
+
+  // Dependencies.
+  private MapLordApiService apiService;
+  private LocationService locationService;
 
   // We use this map to find the marker info for a given annotation.
   // This is used when deleting an annotation, as we need to know the
@@ -48,12 +52,9 @@ public class MapboxFragment extends Fragment {
   private final HashMap<PointAnnotation, MapLordApi.MarkerInfo> markerMap = new HashMap<>();
 
   @Override
-  public View onCreateView(
-    @NonNull LayoutInflater inflater,
-    @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState
-  ) {
-    apiModel = MapLordApp.get(this).getApiModel();
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    apiService = MapLordApp.get(this).getApiService();
+    locationService = MapLordApp.get(this).getLocationService();
 
     binding = FragmentMapboxBinding.inflate(inflater, container, false);
     mapView = binding.mapView;
@@ -99,7 +100,7 @@ public class MapboxFragment extends Fragment {
       MapLordApi.MarkerInfo markerInfo = markerMap.get(annotation);
       assert markerInfo != null;
       // Delete the marker in the API.
-      LiveData<MapLordApi.MarkerDeletionResult> deletionResult = apiModel.apiDeleteMarker(markerInfo);
+      LiveData<MapLordApi.MarkerDeletionResult> deletionResult = apiService.apiDeleteMarker(markerInfo);
       // Delete the equivalent annotation in MapBox.
       deletionResult.observe(getViewLifecycleOwner(), result -> {
         // Only delete if the server has deleted the marker.
@@ -116,7 +117,6 @@ public class MapboxFragment extends Fragment {
   }
 
   private void initCameraLocation() {
-    var locationService = MapLordApp.get(this).getLocationService();
 
     Location location = locationService.getLastKnownLocation();
     Point newCameraLocation = Point.fromLngLat(location.getLongitude(), location.getLatitude());
@@ -126,9 +126,7 @@ public class MapboxFragment extends Fragment {
   }
 
   private void initPreExistingMarkers() {
-    MapLordModel model = MapLordApp.get(this).getApiModel();
-
-    var markerList = model.getPreExistingMarkers();
+    var markerList = apiService.getPreExistingMarkers();
     for (MapLordApi.MarkerInfo marker : markerList) {
       createAnnotationForMarker(marker);
     }
@@ -138,7 +136,7 @@ public class MapboxFragment extends Fragment {
     // Add a marker on the map wherever a user clicks.
     GesturesPlugin gesturesPlugin = GesturesUtils.getGestures(mapView);
     gesturesPlugin.addOnMapClickListener(point -> {
-      LiveData<MapLordApi.MarkerInfo> createdMarkerInfo = apiModel.apiCreateMarker(point);
+      LiveData<MapLordApi.MarkerInfo> createdMarkerInfo = apiService.apiCreateMarker(point);
       createdMarkerInfo.observe(getViewLifecycleOwner(), marker -> {
         createAnnotationForMarker(marker);
       });

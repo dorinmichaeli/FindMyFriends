@@ -44,7 +44,7 @@ public class LocationService {
       })
       .addOnFailureListener(app.getCurrentActivity(), error -> {
         // TODO: Handle failure.
-        app.getErrorDialog()
+        app.getDialogService()
           .fatalError("Failed to get device location: " + error);
       });
 
@@ -65,7 +65,7 @@ public class LocationService {
     // permission.
 
     // See: https://developer.android.com/develop/ui/views/components/dialogs#AlertDialog
-    app.getErrorDialog()
+    app.getDialogService()
       .fatalError(app.getString(R.string.location_permission_denied_exit_message));
   }
 

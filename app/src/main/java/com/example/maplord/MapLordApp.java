@@ -9,8 +9,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.maplord.api.MapLordApi;
-import com.example.maplord.api.MapLordModel;
-import com.example.maplord.services.ErrorDialog;
+import com.example.maplord.services.MapLordApiService;
+import com.example.maplord.services.DialogService;
 import com.example.maplord.services.LocationService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,8 +23,8 @@ public class MapLordApp extends Application {
   private Activity currentActivity;
 
   // Services
-  private ErrorDialog errorDialog;
-  private MapLordModel apiModel;
+  private DialogService dialogService;
+  private MapLordApiService apiService;
   private LocationService locationService;
 
   @Override
@@ -33,10 +33,10 @@ public class MapLordApp extends Application {
 
     initActivityTracking();
 
-    errorDialog = new ErrorDialog(this);
+    dialogService = new DialogService(this);
 
     MapLordApi api = createMapLordApi();
-    apiModel = new MapLordModel(api, errorDialog);
+    apiService = new MapLordApiService(api, dialogService);
 
     locationService = new LocationService(this);
   }
@@ -46,12 +46,12 @@ public class MapLordApp extends Application {
     return currentActivity;
   }
 
-  public ErrorDialog getErrorDialog() {
-    return errorDialog;
+  public DialogService getDialogService() {
+    return dialogService;
   }
 
-  public MapLordModel getApiModel() {
-    return apiModel;
+  public MapLordApiService getApiService() {
+    return apiService;
   }
 
   public LocationService getLocationService() {

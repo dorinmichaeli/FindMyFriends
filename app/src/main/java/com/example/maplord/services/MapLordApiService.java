@@ -1,9 +1,9 @@
-package com.example.maplord.api;
+package com.example.maplord.services;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.maplord.services.ErrorDialog;
+import com.example.maplord.api.MapLordApi;
 import com.mapbox.geojson.Point;
 
 import java.util.List;
@@ -13,14 +13,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MapLordModel {
+public class MapLordApiService {
   private final MapLordApi api;
-  private final ErrorDialog errorDialog;
+  private final DialogService dialogService;
   private List<MapLordApi.MarkerInfo> preExistingMarkers = null;
 
-  public MapLordModel(MapLordApi api, ErrorDialog errorDialog) {
+  public MapLordApiService(MapLordApi api, DialogService dialogService) {
     this.api = api;
-    this.errorDialog = errorDialog;
+    this.dialogService = dialogService;
   }
 
   public LiveData<Boolean> updatePreExistingMarkers() {
@@ -29,13 +29,13 @@ public class MapLordModel {
     Call<List<MapLordApi.MarkerInfo>> call = api.listAllMarkers();
     resolveCall(call, (call1, response, err) -> {
       if (err != null) {
-        errorDialog.fatalError("Error while sending list markers request: " + err);
+        dialogService.fatalError("Error while sending list markers request: " + err);
         return;
       }
 
       if (!response.isSuccessful()) {
         try (ResponseBody errBody = response.errorBody()) {
-          errorDialog.fatalError("Error while receiving list markers response: " + errBody);
+          dialogService.fatalError("Error while receiving list markers response: " + errBody);
         }
         return;
       }
@@ -62,13 +62,13 @@ public class MapLordModel {
     Call<MapLordApi.MarkerInfo> call = api.createMarker(creationRequest);
     resolveCall(call, (call1, response, err) -> {
       if (err != null) {
-        errorDialog.fatalError("Error while sending create marker request: " + err);
+        dialogService.fatalError("Error while sending create marker request: " + err);
         return;
       }
 
       if (!response.isSuccessful()) {
         try (ResponseBody errBody = response.errorBody()) {
-          errorDialog.fatalError("Error while receiving create marker response: " + errBody);
+          dialogService.fatalError("Error while receiving create marker response: " + errBody);
         }
         return;
       }
@@ -90,13 +90,13 @@ public class MapLordModel {
     Call<MapLordApi.MarkerDeletionResult> call = api.deleteMarker(deletionRequest);
     resolveCall(call, (call1, response, err) -> {
       if (err != null) {
-        errorDialog.fatalError("Error while sending delete marker request: " + err);
+        dialogService.fatalError("Error while sending delete marker request: " + err);
         return;
       }
 
       if (!response.isSuccessful()) {
         try (ResponseBody errBody = response.errorBody()) {
-          errorDialog.fatalError("Error while receiving delete marker response: " + errBody);
+          dialogService.fatalError("Error while receiving delete marker response: " + errBody);
         }
         return;
       }
