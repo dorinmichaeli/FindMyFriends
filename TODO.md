@@ -25,3 +25,4 @@
   work.
 - Find out how to perform dependency injection on fragments without throwing everything on the
   MainActivity class.
+- Find out what are *-BoM versions of libraries (e.g. Firebase and JUnit).
