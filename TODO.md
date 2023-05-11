@@ -6,6 +6,8 @@
 - (DONE) Organize the code in the app.
 - (DONE) Add a loader to the app.
 - Add user authentication via Firebase. (Both in the app and the API.)
+- Add live communication between server and client to let the server know when a new marker has been
+  added by another user in their group so that the user can immediately add the marker locally.
 
 ## Future
 
