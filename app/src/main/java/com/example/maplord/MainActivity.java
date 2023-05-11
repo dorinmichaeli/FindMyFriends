@@ -5,7 +5,6 @@ import android.location.Location;
 import android.os.Bundle;
 
 import com.example.maplord.api.MapLordApi;
-import com.example.maplord.api.MapLordModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.snackbar.Snackbar;
@@ -24,31 +23,20 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.maplord.databinding.ActivityMainBinding;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.List;
 import java.util.Map;
-
-import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
   private AppBarConfiguration appBarConfiguration;
   private ActivityMainBinding binding;
   private FusedLocationProviderClient fusedLocationClient;
-  private MapLordModel apiModel;
   private Location lastKnownLocation = null;
   private List<MapLordApi.MarkerInfo> preExistingMarkers = null;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    // TODO: Where's the best place to initialize the API?
-    MapLordApi api = createMapLordApi();
-    apiModel = new MapLordModel(api, this);
 
     binding = ActivityMainBinding.inflate(getLayoutInflater());
     setContentView(binding.getRoot());
@@ -85,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public LiveData<Boolean> updateLastKnownLocation() {
-    MutableLiveData<Boolean> data = new MutableLiveData<>(false);
+    var data = new MutableLiveData<>(false);
 
     if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
       && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -100,25 +88,25 @@ public class MainActivity extends AppCompatActivity {
       })
       .addOnFailureListener(this, error -> {
         // TODO: Handle failure.
-        ErrorDialog.fatalError(this, "Failed to get device location: " + error);
+        MapLordApp.get(this)
+          .getErrorDialog()
+          .fatalError("Failed to get device location: " + error);
       });
 
     return data;
   }
 
   public LiveData<Boolean> updatePreExistingMarkers() {
-    MutableLiveData<Boolean> data = new MutableLiveData<>(false);
+    var data = new MutableLiveData<>(false);
 
-    apiModel.apiListMarkers().observe(this, markerList -> {
-      preExistingMarkers = markerList;
-      data.setValue(true);
-    });
+    MapLordApp.get(this)
+      .getApiModel()
+      .apiListMarkers().observe(this, markerList -> {
+        preExistingMarkers = markerList;
+        data.setValue(true);
+      });
 
     return data;
-  }
-
-  public MapLordModel getApiModel() {
-    return apiModel;
   }
 
   public List<MapLordApi.MarkerInfo> getPreExistingMarkers() {
@@ -131,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
     assert lastKnownLocation != null;
     return lastKnownLocation;
   }
+
   private void onLocationPermissionRefused() {
     // Our application cannot work without fine location access, and so if
     // the user does not grant it there's nothing else we can do other than
@@ -139,7 +128,8 @@ public class MainActivity extends AppCompatActivity {
     // permission.
 
     // See: https://developer.android.com/develop/ui/views/components/dialogs#AlertDialog
-    ErrorDialog.fatalError(this, getString(R.string.location_permission_denied_exit_message));
+    MapLordApp.get(this).getErrorDialog()
+      .fatalError(getString(R.string.location_permission_denied_exit_message));
   }
 
   private void exitApplication() {
@@ -155,24 +145,5 @@ public class MainActivity extends AppCompatActivity {
         callback
       );
     locationPermissionRequest.launch(permissions);
-  }
-
-  private static MapLordApi createMapLordApi() {
-    Gson gson = new GsonBuilder()
-      .create();
-
-    OkHttpClient client = new OkHttpClient.Builder()
-      .build();
-
-    Retrofit retrofit = new Retrofit.Builder()
-      // TODO: Export the URL to a resource file or whatever?
-      .baseUrl("http://maplord.api:3000")
-      .client(client)
-      .addConverterFactory(GsonConverterFactory.create(gson))
-      .build();
-
-    MapLordApi api = retrofit.create(MapLordApi.class);
-
-    return api;
   }
 }

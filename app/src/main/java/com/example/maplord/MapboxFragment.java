@@ -54,9 +54,7 @@ public class MapboxFragment extends Fragment {
     @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState
   ) {
-    MainActivity mainActivity = (MainActivity) getActivity();
-    assert mainActivity != null;
-    apiModel = mainActivity.getApiModel();
+    apiModel = MapLordApp.get(this).getApiModel();
 
     binding = FragmentMapboxBinding.inflate(inflater, container, false);
     mapView = binding.mapView;

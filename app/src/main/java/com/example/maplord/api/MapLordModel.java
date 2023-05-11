@@ -17,11 +17,11 @@ import retrofit2.Response;
 
 public class MapLordModel {
   private final MapLordApi api;
-  private final Activity activity;
+  private final ErrorDialog errorDialog;
 
-  public MapLordModel(MapLordApi api, Activity activity) {
+  public MapLordModel(MapLordApi api, ErrorDialog errorDialog) {
     this.api = api;
-    this.activity = activity;
+    this.errorDialog = errorDialog;
   }
 
   public LiveData<List<MapLordApi.MarkerInfo>> apiListMarkers() {
@@ -31,12 +31,12 @@ public class MapLordModel {
     resolveCall(call, (call1, response, err) -> {
       // TODO: How to handle errors in communication with the server?
       if (err != null) {
-        ErrorDialog.fatalError(activity, "Error while sending list markers request: " + err);
+        errorDialog.fatalError("Error while sending list markers request: " + err);
         return;
       }
       if (!response.isSuccessful()) {
         try (ResponseBody errBody = response.errorBody()) {
-          ErrorDialog.fatalError(activity, "Error while receiving list markers response: " + errBody);
+          errorDialog.fatalError("Error while receiving list markers response: " + errBody);
         }
         return;
       }
@@ -58,14 +58,14 @@ public class MapLordModel {
     resolveCall(call, (call1, response, err) -> {
       // TODO: How to handle errors in communication with the server?
       if (err != null) {
-        ErrorDialog.fatalError(activity, "Error while sending create marker request: " + err);
+        errorDialog.fatalError("Error while sending create marker request: " + err);
         return;
       }
       // lat: ValidatorError: Path `lat` is required.
       // lon: ValidatorError: Path `lon` is required
       if (!response.isSuccessful()) {
         try (ResponseBody errBody = response.errorBody()) {
-          ErrorDialog.fatalError(activity, "Error while receiving create marker response: " + errBody);
+          errorDialog.fatalError("Error while receiving create marker response: " + errBody);
         }
         return;
       }
@@ -88,12 +88,12 @@ public class MapLordModel {
     resolveCall(call, (call1, response, err) -> {
       // TODO: How to handle errors in communication with the server?
       if (err != null) {
-        ErrorDialog.fatalError(activity, "Error while sending delete marker request: " + err);
+        errorDialog.fatalError("Error while sending delete marker request: " + err);
         return;
       }
       if (!response.isSuccessful()) {
         try (ResponseBody errBody = response.errorBody()) {
-          ErrorDialog.fatalError(activity, "Error while receiving delete marker response: " + errBody);
+          errorDialog.fatalError("Error while receiving delete marker response: " + errBody);
         }
         return;
       }
