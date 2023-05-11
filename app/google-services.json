@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "73081067599",
+    "project_id": "android-test-project-3e279",
+    "storage_bucket": "android-test-project-3e279.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:73081067599:android:9cd551123e16437c1af23a",
+        "android_client_info": {
+          "package_name": "com.example.maplord"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "73081067599-k0l0jtfhudbp8ddjg7veh3utq27vlno1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATks3T0fl3VsDrkv_RMz49An-GOwSAFoE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "73081067599-k0l0jtfhudbp8ddjg7veh3utq27vlno1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
