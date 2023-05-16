@@ -23,7 +23,6 @@ import com.example.maplord.services.MapLordApiService;
 import com.example.maplord.databinding.FragmentMapboxBinding;
 import com.example.maplord.services.UserService;
 import com.google.firebase.auth.FirebaseUser;
-import com.mapbox.maps.ViewAnnotationManagerImpl;
 import com.mapbox.maps.ViewAnnotationOptions;
 import com.mapbox.maps.plugin.Plugin;
 import com.mapbox.maps.plugin.annotation.AnnotationConfig;
