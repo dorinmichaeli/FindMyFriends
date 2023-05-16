@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,9 +17,14 @@ import androidx.lifecycle.LiveData;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.maplord.api.MapLordApi;
+import com.example.maplord.databinding.AnnotationViewBinding;
 import com.example.maplord.services.LocationService;
 import com.example.maplord.services.MapLordApiService;
 import com.example.maplord.databinding.FragmentMapboxBinding;
+import com.example.maplord.services.UserService;
+import com.google.firebase.auth.FirebaseUser;
+import com.mapbox.maps.ViewAnnotationManagerImpl;
+import com.mapbox.maps.ViewAnnotationOptions;
 import com.mapbox.maps.plugin.Plugin;
 import com.mapbox.maps.plugin.annotation.AnnotationConfig;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotation;
@@ -34,6 +40,7 @@ import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions;
 
 import com.mapbox.maps.plugin.gestures.GesturesPlugin;
 import com.mapbox.maps.plugin.gestures.GesturesUtils;
+import com.mapbox.maps.viewannotation.ViewAnnotationManager;
 
 import java.util.HashMap;
 
@@ -41,10 +48,12 @@ public class MapboxFragment extends Fragment {
   private FragmentMapboxBinding binding;
   private MapView mapView;
   private PointAnnotationManager pointAnnotationManager;
+  private ViewAnnotationManager viewAnnotationManager;
 
   // Dependencies.
   private MapLordApiService apiService;
   private LocationService locationService;
+  private UserService userService;
 
   // We use this map to find the marker info for a given annotation.
   // This is used when deleting an annotation, as we need to know the
@@ -55,6 +64,7 @@ public class MapboxFragment extends Fragment {
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     apiService = MapLordApp.get(this).getApiService();
     locationService = MapLordApp.get(this).getLocationService();
+    userService = MapLordApp.get(this).getUserService();
 
     binding = FragmentMapboxBinding.inflate(inflater, container, false);
     mapView = binding.mapView;
@@ -79,6 +89,7 @@ public class MapboxFragment extends Fragment {
   private void initMapboxEverything() {
     initMapVisualStyle();
     initPointAnnotationManager();
+    initViewAnnotationManager();
     initCameraLocation();
     initPreExistingMarkers();
     initCreateMarkerOnClick();
@@ -93,6 +104,7 @@ public class MapboxFragment extends Fragment {
     // creating, deleting, and interacting with the markers.
     AnnotationPlugin annotationPlugin = mapView.getPlugin(Plugin.MAPBOX_ANNOTATION_PLUGIN_ID);
     assert annotationPlugin != null;
+
     pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationPlugin, (AnnotationConfig) null);
     // Delete a marker when a user clicks on it.
     pointAnnotationManager.addClickListener(annotation -> {
@@ -116,8 +128,23 @@ public class MapboxFragment extends Fragment {
     });
   }
 
-  private void initCameraLocation() {
+  private void initViewAnnotationManager() {
+    viewAnnotationManager = binding.mapView.getViewAnnotationManager();
+  }
 
+  private void addViewAnnotation(Point point, String text) {
+    var options = new ViewAnnotationOptions.Builder()
+      .geometry(point)
+      .allowOverlap(true)
+      .build();
+    var viewAnnotation = viewAnnotationManager
+      .addViewAnnotation(R.layout.annotation_view, options);
+    TextView label = viewAnnotation.findViewById(R.id.annotation_text_label);
+    label.setText(text);
+    AnnotationViewBinding.bind(viewAnnotation);
+  }
+
+  private void initCameraLocation() {
     Location location = locationService.getLastKnownLocation();
     Point newCameraLocation = Point.fromLngLat(location.getLongitude(), location.getLatitude());
     MapboxMap map = mapView.getMapboxMap();
@@ -139,6 +166,9 @@ public class MapboxFragment extends Fragment {
       LiveData<MapLordApi.MarkerInfo> createdMarkerInfo = apiService.apiCreateMarker(point);
       createdMarkerInfo.observe(getViewLifecycleOwner(), marker -> {
         createAnnotationForMarker(marker);
+        FirebaseUser user = userService.getUser();
+        String annotationText = user.getEmail();
+        addViewAnnotation(point, annotationText);
       });
       return true;
     });

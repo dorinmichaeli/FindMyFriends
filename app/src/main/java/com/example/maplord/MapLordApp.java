@@ -12,6 +12,7 @@ import com.example.maplord.api.MapLordApi;
 import com.example.maplord.services.MapLordApiService;
 import com.example.maplord.services.DialogService;
 import com.example.maplord.services.LocationService;
+import com.example.maplord.services.UserService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -26,6 +27,7 @@ public class MapLordApp extends Application {
   private DialogService dialogService;
   private MapLordApiService apiService;
   private LocationService locationService;
+  private UserService userService;
 
   @Override
   public void onCreate() {
@@ -39,6 +41,8 @@ public class MapLordApp extends Application {
     apiService = new MapLordApiService(api, dialogService);
 
     locationService = new LocationService(this);
+
+    userService = new UserService();
   }
 
   public Activity getCurrentActivity() {
@@ -56,6 +60,10 @@ public class MapLordApp extends Application {
 
   public LocationService getLocationService() {
     return locationService;
+  }
+
+  public UserService getUserService() {
+    return userService;
   }
 
   private void initActivityTracking() {
@@ -115,8 +123,7 @@ public class MapLordApp extends Application {
   }
 
   public static MapLordApp get(Fragment fragment) {
-    Activity activity = fragment.getActivity();
-    assert activity != null;
+    Activity activity = fragment.requireActivity();
     return get(activity);
   }
 }

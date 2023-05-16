@@ -12,6 +12,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.maplord.databinding.FragmentLoginBinding;
 import com.example.maplord.services.DialogService;
+import com.example.maplord.services.UserService;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -19,15 +20,16 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginFragment extends Fragment {
   private FragmentLoginBinding binding;
   private FirebaseAuth firebaseAuth;
-  private FirebaseUser user;
 
   // Dependencies.
   private DialogService dialogService;
+  private UserService userService;
 
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     dialogService = MapLordApp.get(this).getDialogService();
+    userService = MapLordApp.get(this).getUserService();
 
     firebaseAuth = FirebaseAuth.getInstance();
 
@@ -48,7 +50,7 @@ public class LoginFragment extends Fragment {
     // Turn off the button while we're attempting to perform the login.
     binding.buttonLogin.setEnabled(false);
 
-    if (user != null) {
+    if (userService.isLoggedIn()) {
       // Huh? The button shouldn't be clickable if we're already logged in,
       // but just we do this check just in case.
       dialogService.alert("Logged in", "You are already logged in.", () -> {
@@ -75,8 +77,7 @@ public class LoginFragment extends Fragment {
   }
 
   private void tryLogin(String email, String password) {
-    var activity = getActivity();
-    assert activity != null;
+    var activity = requireActivity();
     firebaseAuth
       .signInWithEmailAndPassword(email, password)
       .addOnSuccessListener(result -> {
@@ -88,8 +89,9 @@ public class LoginFragment extends Fragment {
   }
 
   private void loginSuccess(AuthResult result) {
-    user = result.getUser();
+    FirebaseUser user = result.getUser();
     assert user != null;
+    userService.setUser(user);
     String message = String.format("Welcome %s!\nYour user ID is %s.", user.getEmail(), user.getUid());
     dialogService.alert("Login success", message, () -> {
       goToAppAfterLogin();
