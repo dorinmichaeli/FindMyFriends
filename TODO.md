@@ -5,17 +5,17 @@
 - (DONE) Add error handling to the app.
 - (DONE) Organize the code in the app.
 - (DONE) Add a loader to the app.
-- Add user authentication via Firebase. (Both in the app and the API.)
-- Add live communication between server and client to let the server know when a new marker has been
-  added by another user in their group so that the user can immediately add the marker locally.
-
+- (Partially done) Add user authentication via Firebase. (Both in the app and the API.)
+- (Partially done) Marker ownership. A user should be able to see the name/id of the user that created a specific
+  marker. For example each marker should have a name above it, or a unique per-user color.
+  
 ## Future
 
+- Add live communication between server and client to let the server know when a new marker has been
+  added by another user in their group so that the user can immediately add the marker locally.
 - Implement user groups. A user should only see the markers created by the users in the same group
   as them.
 - See list of users in your group.
-- Marker ownership. A user should be able to see the name/id of the user that created a specific
-  marker. For example each marker should have a name above it, or a unique per-user color.
 - Chat room with other users in your group.
 - See live locations of all users in your group.
 - Think about how we can emulate/simulate multiple devices for field testing. Do we need to get
