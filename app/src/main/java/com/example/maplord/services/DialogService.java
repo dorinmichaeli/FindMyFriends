@@ -1,9 +1,14 @@
 package com.example.maplord.services;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
 import com.example.maplord.MapLordApp;
 import com.example.maplord.R;
+import com.example.maplord.tools.Action;
+
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class DialogService {
   private final MapLordApp app;
@@ -20,6 +25,23 @@ public class DialogService {
       .setCancelable(false)
       .setPositiveButton("OK", (dialog, id) -> {
         app.getCurrentActivity().finish();
+      });
+    AlertDialog alert = builder.create();
+    alert.show();
+  }
+
+
+  public void alert(String title, String message, @Nullable Action onClose) {
+    AlertDialog.Builder builder = new AlertDialog.Builder(app.getCurrentActivity());
+    builder
+      .setTitle(title)
+      .setMessage(message)
+      .setCancelable(false)
+      .setPositiveButton("OK", (dialog, id) -> {
+        dialog.cancel();
+        if (onClose != null) {
+          onClose.apply();
+        }
       });
     AlertDialog alert = builder.create();
     alert.show();

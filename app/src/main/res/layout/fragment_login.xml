@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="256dp"
         android:autofillHints="emailAddress"
-        android:hint="email"
+        android:text="levi2p@gmail.com"
+        android:hint="@string/login_input_placeholder_email"
         android:inputType="textEmailAddress"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,19 +26,34 @@
         android:layout_width="368dp"
         android:layout_height="wrap_content"
         android:autofillHints="password"
-        android:hint="password"
+        android:text="234WERsdf"
+        android:hint="@string/login_input_placeholder_password"
         android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_input_email" />
 
+    <TextView
+        android:id="@+id/text_view_login_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Currently unused label!"
+        android:textColor="@color/red"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toTopOf="@id/button_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_input_password" />
+
     <Button
         android:id="@+id/button_login"
         android:layout_width="192dp"
         android:layout_height="wrap_content"
-        android:text="@string/login"
+        android:text="@string/login_button_label"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_input_password" />
+        app:layout_constraintTop_toBottomOf="@id/text_view_login_status" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
