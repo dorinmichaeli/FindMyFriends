@@ -21,6 +21,12 @@
 - Think about how we can emulate/simulate multiple devices for field testing. Do we need to get
   multiple old Android devices or something?
 
+## Bugs
+
+- Navigating backwards from the MapboxFragment takes you back to the LoaderFragment, which then
+  tries yet again to take you back to the MapboxFragment. The "navigate back" button should be
+  overridden to take the user back to FirstFragment or SecondFragment.
+
 ## Research
 
 - Find out how to change the app's name and icon in the apps view in the device.
