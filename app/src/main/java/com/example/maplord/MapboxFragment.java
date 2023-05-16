@@ -21,8 +21,6 @@ import com.example.maplord.databinding.AnnotationViewBinding;
 import com.example.maplord.services.LocationService;
 import com.example.maplord.services.MapLordApiService;
 import com.example.maplord.databinding.FragmentMapboxBinding;
-import com.example.maplord.services.UserService;
-import com.google.firebase.auth.FirebaseUser;
 import com.mapbox.maps.ViewAnnotationOptions;
 import com.mapbox.maps.plugin.Plugin;
 import com.mapbox.maps.plugin.annotation.AnnotationConfig;
@@ -52,18 +50,16 @@ public class MapboxFragment extends Fragment {
   // Dependencies.
   private MapLordApiService apiService;
   private LocationService locationService;
-  private UserService userService;
 
   // We use this map to find the marker info for a given annotation.
   // This is used when deleting an annotation, as we need to know the
   // marker's id in order to delete it from the server.
-  private final HashMap<PointAnnotation, MapLordApi.MarkerInfo> markerMap = new HashMap<>();
+  private final HashMap<PointAnnotation, AnnotationInfo> markerMap = new HashMap<>();
 
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     apiService = MapLordApp.get(this).getApiService();
     locationService = MapLordApp.get(this).getLocationService();
-    userService = MapLordApp.get(this).getUserService();
 
     binding = FragmentMapboxBinding.inflate(inflater, container, false);
     mapView = binding.mapView;
@@ -108,18 +104,20 @@ public class MapboxFragment extends Fragment {
     // Delete a marker when a user clicks on it.
     pointAnnotationManager.addClickListener(annotation -> {
       // Look up the marker info to know its id.
-      MapLordApi.MarkerInfo markerInfo = markerMap.get(annotation);
-      assert markerInfo != null;
+      AnnotationInfo info = markerMap.get(annotation);
+      assert info != null;
       // Delete the marker in the API.
-      LiveData<MapLordApi.MarkerDeletionResult> deletionResult = apiService.apiDeleteMarker(markerInfo);
+      LiveData<MapLordApi.MarkerDeletionResult> deletionResult = apiService.apiDeleteMarker(info.markerInfo);
       // Delete the equivalent annotation in MapBox.
       deletionResult.observe(getViewLifecycleOwner(), result -> {
         // Only delete if the server has deleted the marker.
         if (!result.deleted) {
           return;
         }
-        // Delete the annotation from MapBox.
+        // Delete the point annotation (marker image) from MapBox.
         pointAnnotationManager.delete(annotation);
+        // Delete the view annotation (text label) from MapBox.
+        viewAnnotationManager.removeViewAnnotation(info.viewAnnotation);
         // Delete the marker info from the HashMap.
         markerMap.remove(annotation);
       });
@@ -131,16 +129,17 @@ public class MapboxFragment extends Fragment {
     viewAnnotationManager = binding.mapView.getViewAnnotationManager();
   }
 
-  private void addViewAnnotation(Point point, String text) {
+  private View addViewAnnotation(Point point, String text) {
     var options = new ViewAnnotationOptions.Builder()
       .geometry(point)
       .allowOverlap(true)
       .build();
-    var viewAnnotation = viewAnnotationManager
+    var view = viewAnnotationManager
       .addViewAnnotation(R.layout.annotation_view, options);
-    TextView label = viewAnnotation.findViewById(R.id.annotation_text_label);
+    TextView label = view.findViewById(R.id.annotation_text_label);
     label.setText(text);
-    AnnotationViewBinding.bind(viewAnnotation);
+    AnnotationViewBinding.bind(view);
+    return view;
   }
 
   private void initCameraLocation() {
@@ -161,23 +160,26 @@ public class MapboxFragment extends Fragment {
   private void initCreateMarkerOnClick() {
     // Add a marker on the map wherever a user clicks.
     GesturesPlugin gesturesPlugin = GesturesUtils.getGestures(mapView);
+
     gesturesPlugin.addOnMapClickListener(point -> {
       LiveData<MapLordApi.MarkerInfo> createdMarkerInfo = apiService.apiCreateMarker(point);
+
       createdMarkerInfo.observe(getViewLifecycleOwner(), marker -> {
+        // Create a visual annotation for the marker created by the API.
         createAnnotationForMarker(marker);
-        FirebaseUser user = userService.getUser();
-        String annotationText = user.getEmail();
-        addViewAnnotation(point, annotationText);
       });
+
       return true;
     });
   }
 
   private void createAnnotationForMarker(MapLordApi.MarkerInfo marker) {
+    // Get the marker image.
     Drawable markerSource = AppCompatResources.getDrawable(requireContext(), R.drawable.red_marker);
     assert markerSource != null;
     assert markerSource instanceof BitmapDrawable;
 
+    // Configure the point annotation options.
     double markerScale = ResourceTools.getDouble(this, R.string.mapbox_red_marker_scale);
     Point point = Point.fromLngLat(marker.lon, marker.lat);
     PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions()
@@ -185,8 +187,15 @@ public class MapboxFragment extends Fragment {
       .withIconImage(((BitmapDrawable) markerSource).getBitmap())
       .withIconSize(markerScale);
 
+    // Create a point annotation for the marker image.
     PointAnnotation annotation = pointAnnotationManager.create(pointAnnotationOptions);
-    markerMap.put(annotation, marker);
+
+    // Create a view annotation for the text label.
+    View view = addViewAnnotation(point, marker.label);
+
+    // Map the annotation info to the mapbox annotation.
+    var info = new AnnotationInfo(marker, view);
+    markerMap.put(annotation, info);
   }
 
   private void moveCameraTo(MapboxMap map, Point point, double zoom) {
@@ -196,5 +205,15 @@ public class MapboxFragment extends Fragment {
       .build();
 
     map.setCamera(camera);
+  }
+
+  static class AnnotationInfo {
+    public final MapLordApi.MarkerInfo markerInfo;
+    public final View viewAnnotation;
+
+    AnnotationInfo(MapLordApi.MarkerInfo markerInfo, View viewAnnotation) {
+      this.markerInfo = markerInfo;
+      this.viewAnnotation = viewAnnotation;
+    }
   }
 }

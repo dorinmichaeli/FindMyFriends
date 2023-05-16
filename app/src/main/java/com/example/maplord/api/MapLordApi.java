@@ -23,8 +23,10 @@ public interface MapLordApi {
     @Body MarkerDeletionRequest deletionRequest
   );
 
+  // Details of a single marker as reported by the API.
   class MarkerInfo {
     public String id;
+    public String label;
     public double lat;
     public double lon;
   }

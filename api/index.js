@@ -27,12 +27,14 @@ async function main() {
   app.post('/create-marker', express.json(), asyncHandler(async (req, res) => {
     const markerOptions = req.body;
     const createStatus = await markerModel.create({
+      label: new Date().toISOString(),
       lat: markerOptions.lat,
       lon: markerOptions.lon,
     });
     const markerId = createStatus._id.toString();
     res.json({
       id: markerId,
+      label: createStatus._doc.label,
       lat: createStatus._doc.lat,
       lon: createStatus._doc.lon,
     });
@@ -43,6 +45,7 @@ async function main() {
     const sanitizedList = markerList.map(marker => {
       return {
         id: marker._id,
+        label: marker.label,
         lat: marker.lat,
         lon: marker.lon,
       };
