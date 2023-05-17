@@ -1,5 +1,23 @@
 # Learning how to use Mapbox!
 
+## Launching the API
+
+Launching MongoDB and Mongo Express GUI:
+```sh
+cd api/mongo
+docker-compose up -d
+```
+
+Launching the API:
+```sh
+cd api
+npm ci
+npm start
+```
+
+### Launching the app in Android Studio emulator
+
+
 ## Mapbox
 
 ### Installation guide used
