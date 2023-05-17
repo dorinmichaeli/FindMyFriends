@@ -17,6 +17,10 @@ npm start
 
 ### Launching the app in Android Studio emulator
 
+1. Open the project in Android Studio.
+2. Launch the `app` configuration in 'run' or 'debug' mode.
+
+_Note:_ The app was tested only using a `Pixel 2 API 25` emulator.
 
 ## Mapbox
 
