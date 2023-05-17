@@ -21,11 +21,21 @@ services:
     volumes:
       # MongoDB data persistence.
       - './data/:/data/db/'
+    healthcheck:
+      test: >-
+        echo 'db.runCommand("ping").ok' | mongo mongo:27017/test --quiet
+      start_period: '5s'
+      interval: '5s'
+      timeout: '5s'
+      retries: 5
 
   mongo-gui:
     <<: *service-defaults
     image: 'mongo-express:0.54.0'
     container_name: 'maplord-mongo-gui'
+    depends_on:
+      mongo:
+        condition: 'service_healthy'
     ports:
       - '8081:8081'
     environment:
