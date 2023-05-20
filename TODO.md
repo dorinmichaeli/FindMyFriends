@@ -6,9 +6,10 @@
 - (DONE) Organize the code in the app.
 - (DONE) Add a loader to the app.
 - (Partially done) Add user authentication via Firebase. (Both in the app and the API.)
-- (Partially done) Marker ownership. A user should be able to see the name/id of the user that created a specific
-  marker. For example each marker should have a name above it, or a unique per-user color.
-  
+- (Partially done) Marker ownership. A user should be able to see the name/id of the user that
+  created a specific marker. For example each marker should have a name above it, or a unique
+  per-user color.
+
 ## Future
 
 - Add live communication between server and client to let the server know when a new marker has been
