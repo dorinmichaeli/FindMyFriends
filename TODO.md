@@ -17,8 +17,6 @@
 
 ## Future
 
-- Add live communication between server and client to let the server know when a new marker has been
-  added by another user in their group so that the user can immediately add the marker locally.
 - Implement user groups. A user should only see the markers created by the users in the same group
   as them.
 - See list of users in your group.
