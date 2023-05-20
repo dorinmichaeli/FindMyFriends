@@ -5,6 +5,7 @@ import {createMarkerModel} from './lib/models/marker.model.js';
 import {notFound404} from './lib/handler/notFound404.handler.js';
 import {internalError500} from './lib/handler/internalError500.handler.js';
 import {createMarkerRouter} from './lib/routers/marker.router.js';
+import {createUserAuthService} from './lib/services/userAuth.service.js';
 
 const MAP_LORD_API_PORT = 3000;
 
@@ -20,9 +21,12 @@ async function main() {
   // Create the marker model.
   const markerModel = createMarkerModel(client);
 
+  // Create the user auth service.
+  const userAuthService = createUserAuthService(config);
+
   const app = express();
 
-  app.use(createMarkerRouter({markerModel}));
+  app.use(createMarkerRouter({markerModel, userAuthService}));
   app.use(notFound404);
   app.use(internalError500);
 

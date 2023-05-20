@@ -26,7 +26,7 @@ public interface MapLordApi {
   // Details of a single marker as reported by the API.
   class MarkerInfo {
     public String id;
-    public String label;
+    public String owner;
     public double lat;
     public double lon;
   }

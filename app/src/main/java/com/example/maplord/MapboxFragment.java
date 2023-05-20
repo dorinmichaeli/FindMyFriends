@@ -190,8 +190,9 @@ public class MapboxFragment extends Fragment {
     // Create a point annotation for the marker image.
     PointAnnotation annotation = pointAnnotationManager.create(pointAnnotationOptions);
 
-    // Create a view annotation for the text label.
-    View view = addViewAnnotation(point, marker.label);
+    // Create a view annotation for the text
+    // label that shows the marker's owner.
+    View view = addViewAnnotation(point, marker.owner);
 
     // Map the annotation info to the mapbox annotation.
     var info = new AnnotationInfo(marker, view);

@@ -1,18 +1,23 @@
 import express from 'express';
 import {asyncHandler} from '../tools/async-handler.js';
+import {createUserAuthMiddleware} from '../middleware/userAuth.middleware.js';
 
-export function createMarkerRouter({markerModel}) {
+export function createMarkerRouter({markerModel, userAuthService}) {
   async function createMarkerHandler(req, res) {
     const markerOptions = req.body;
+
+    const userEmail = req.userInfo.email;
     const createStatus = await markerModel.create({
-      label: new Date().toISOString(),
+      owner: userEmail,
       lat: markerOptions.lat,
       lon: markerOptions.lon,
     });
+
     const markerId = createStatus._id.toString();
+
     res.json({
       id: markerId,
-      label: createStatus._doc.label,
+      owner: createStatus._doc.owner,
       lat: createStatus._doc.lat,
       lon: createStatus._doc.lon,
     });
@@ -23,7 +28,7 @@ export function createMarkerRouter({markerModel}) {
     const sanitizedList = markerList.map(marker => {
       return {
         id: marker._id,
-        label: marker.label,
+        owner: marker.owner,
         lat: marker.lat,
         lon: marker.lon,
       };
@@ -42,6 +47,7 @@ export function createMarkerRouter({markerModel}) {
   }
 
   const router = express.Router();
+  router.use(createUserAuthMiddleware({userAuthService}));
   router.get('/list-all-markers', asyncHandler(listAllMarkersHandler));
   router.post('/delete-marker', express.json(), asyncHandler(deleteMarkerHandler));
   router.post('/create-marker', express.json(), asyncHandler(createMarkerHandler));
