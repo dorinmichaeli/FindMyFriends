@@ -3,6 +3,7 @@ package com.example.maplord;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,8 +14,14 @@ import com.example.maplord.services.MapLordApiService;
 import com.example.maplord.services.DialogService;
 import com.example.maplord.services.LocationService;
 import com.example.maplord.services.UserService;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -37,12 +44,14 @@ public class MapLordApp extends Application {
 
     dialogService = new DialogService(this);
 
-    MapLordApi api = createMapLordApi();
-    apiService = new MapLordApiService(api, dialogService);
+    userService = new UserService();
+
+    apiService = new MapLordApiService(
+      getString(R.string.maplord_api_url),
+      userService,
+      dialogService);
 
     locationService = new LocationService(this);
-
-    userService = new UserService();
   }
 
   public Activity getCurrentActivity() {
@@ -99,24 +108,7 @@ public class MapLordApp extends Application {
     });
   }
 
-  private static MapLordApi createMapLordApi() {
-    Gson gson = new GsonBuilder()
-      .create();
-
-    OkHttpClient client = new OkHttpClient.Builder()
-      .build();
-
-    Retrofit retrofit = new Retrofit.Builder()
-      // TODO: Export the URL to a resource file or whatever?
-      .baseUrl("http://maplord.api:3000")
-      .client(client)
-      .addConverterFactory(GsonConverterFactory.create(gson))
-      .build();
-
-    MapLordApi api = retrofit.create(MapLordApi.class);
-
-    return api;
-  }
+  // Helper methods.
 
   public static MapLordApp get(Activity activity) {
     return (MapLordApp) activity.getApplication();

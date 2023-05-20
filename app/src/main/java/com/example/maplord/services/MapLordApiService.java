@@ -4,23 +4,71 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.maplord.api.MapLordApi;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mapbox.geojson.Point;
 
 import java.util.List;
 
+import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MapLordApiService {
   private final MapLordApi api;
-  private final DialogService dialogService;
   private List<MapLordApi.MarkerInfo> preExistingMarkers = null;
 
-  public MapLordApiService(MapLordApi api, DialogService dialogService) {
-    this.api = api;
+  // Dependencies.
+  private final UserService userService;
+  private final DialogService dialogService;
+
+  public MapLordApiService(String maplordApiUrl, UserService userService, DialogService dialogService) {
+    this.api = createMapLordApi(maplordApiUrl);
+    this.userService = userService;
     this.dialogService = dialogService;
+  }
+
+  private MapLordApi createMapLordApi(String maplordApiUrl) {
+    Gson gson = new GsonBuilder()
+      .create();
+
+    OkHttpClient client = new OkHttpClient.Builder()
+      // ** MIDDLEWARE **
+      // Add the auth token to every request.
+      .addInterceptor(chain -> {
+        // Get the auth token from the user service. If the token needs to be
+        // refreshed by sending a request to the Firebase API, this will block
+        // until the refresh is complete. Blocking this thread is *probably*
+        // fine, since this interceptor is running on a background thread.
+        String authToken = userService.getAuthTokenSync();
+
+        // Create a new request with the auth token in the header.
+        //
+        // NOTE:
+        //   OkHttpClient3 Request objects are immutable, that's why we have
+        //   to create a new one instead of modifying the existing one.
+        var request = chain.request()
+          .newBuilder()
+          .addHeader("Auth", authToken)
+          .build();
+
+        return chain.proceed(request);
+      })
+      .build();
+
+    Retrofit retrofit = new Retrofit.Builder()
+      .baseUrl(maplordApiUrl)
+      .client(client)
+      .addConverterFactory(GsonConverterFactory.create(gson))
+      .build();
+
+    MapLordApi api = retrofit.create(MapLordApi.class);
+
+    return api;
   }
 
   public LiveData<Boolean> updatePreExistingMarkers() {
