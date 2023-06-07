@@ -2,6 +2,13 @@
 
 ## Tasks
 
+- Add HTTPS to the API.
+
+- Think about how we can emulate/simulate multiple devices for field testing. Do we need to get
+  multiple old Android devices or something?
+- Add live communication between server and client to let the server know when a new marker has been
+  added by another user in their group so that the user can immediately add the marker locally.
+
 - (DONE) Add error handling to the app.
 - (DONE) Organize the code in the app.
 - (DONE) Add a loader to the app.
@@ -10,19 +17,14 @@
   created a specific marker. For example each marker should have a name above it, or a unique
   per-user color.
 
-- Add HTTPS to the API.
-
-- Think about how we can emulate/simulate multiple devices for field testing. Do we need to get
-  multiple old Android devices or something?
-- Add live communication between server and client to let the server know when a new marker has been
-  added by another user in their group so that the user can immediately add the marker locally.
 
 ## Secondary tasks
 
 - Implement login via google.
 - Fix back navigation from MapboxFragment not working.
 - Find out how to change the app's name and icon in the apps view in the device.
-- Make HTTPS with self-signed certificates work during development.
+
+- (Done) Make HTTPS with self-signed certificates work during development.
 
 ## Future
 
