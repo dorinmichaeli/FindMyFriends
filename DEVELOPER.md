@@ -42,8 +42,15 @@ The `createPointAnnotationManager` method is not defined on the `AnnotationApi` 
 equivalent code in Java would be:
 
 ```java
-PointAnnotationManager pointAnnotationManager = PointAnnotationManagerKt
-        .createPointAnnotationManager(annotationApi, (AnnotationConfig) null);
+PointAnnotationManager pointAnnotationManager=PointAnnotationManagerKt
+        .createPointAnnotationManager(annotationApi,(AnnotationConfig)null);
 ```
 
 [Link](https://stackoverflow.com/a/28364983)
+
+## Interesting things
+
+- The `Snackbar` class allows us to make messages pop up from the bottom of the screen. It's
+  similar to a `Toast` but it's more customizable and can be dismissed by the user.
+- The `Toast` class allows us to make messages pop up from the bottom of the screen. It's similar
+  to a `Snackbar` but it's less customizable and can't be dismissed by the user. (?)
