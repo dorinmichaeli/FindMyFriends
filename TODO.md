@@ -17,6 +17,12 @@
 - Add live communication between server and client to let the server know when a new marker has been
   added by another user in their group so that the user can immediately add the marker locally.
 
+## Secondary tasks
+
+- Implement login via google.
+- Fix back navigation from MapboxFragment not working.
+- Find out how to change the app's name and icon in the apps view in the device.
+
 ## Future
 
 - Implement user groups. A user should only see the markers created by the users in the same group
@@ -25,20 +31,10 @@
 - Chat room with other users in your group.
 - See live locations of all users in your group.
 
-## Bugs
-
-- Navigating backwards from the MapboxFragment takes you back to the LoaderFragment, which then
-  tries yet again to take you back to the MapboxFragment. The "navigate back" button should be
-  overridden to take the user back to FirstFragment or SecondFragment.
-
 ## Research
 
 - (DONE) Find out how to perform dependency injection on fragments without throwing everything on
   the MainActivity class.
-- Find out how to change the app's name and icon in the apps view in the device.
-- Find out if we really need both COARSE_LOCATION and FINE_LOCATION permissions in the manifest
-  file. Android Studio says we need both, currently we're using only FINE_LOCATION and it seems to
-  work.
 - Find out what are *-BoM versions of libraries (e.g. Firebase and JUnit).
 
 ## Links of possible interest
