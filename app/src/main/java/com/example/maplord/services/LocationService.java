@@ -6,6 +6,7 @@ import android.location.Location;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.LiveData;
@@ -14,7 +15,10 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.maplord.MapLordApp;
 import com.example.maplord.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.CancellationToken;
+import com.google.android.gms.tasks.OnTokenCanceledListener;
 
 import java.util.Map;
 
@@ -37,8 +41,9 @@ public class LocationService {
     }
 
     fusedLocationClient
-      .getLastLocation()
+      .getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null)
       .addOnSuccessListener(app.getCurrentActivity(), location -> {
+        assert location != null;
         lastKnownLocation = location;
         data.setValue(true);
       })
@@ -52,7 +57,6 @@ public class LocationService {
   }
 
   public Location getLastKnownLocation() {
-    // TODO: What happens if the caller gets an exception?
     assert lastKnownLocation != null;
     return lastKnownLocation;
   }
