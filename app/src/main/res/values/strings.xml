@@ -3,11 +3,6 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="maplord_api_url">https://maplord.api:3000</string>
 
-    <string name="login_fragment_label">Login Fragment</string>
-    <string name="login_button_label">Login</string>
-    <string name="login_input_placeholder_email">Email</string>
-    <string name="login_input_placeholder_password">Password</string>
-
     <string name="next_fragment">Next</string>
 
     <string name="menu_fragment_label">Menu</string>
