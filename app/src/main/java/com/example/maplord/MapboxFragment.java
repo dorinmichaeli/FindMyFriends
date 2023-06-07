@@ -77,7 +77,7 @@ public class MapboxFragment extends Fragment {
   private void initGoBackButton() {
     binding.buttonMapbox.setOnClickListener(view1 -> {
       NavHostFragment.findNavController(MapboxFragment.this)
-        .navigate(R.id.action_MapboxFragment_to_SecondFragment);
+        .navigate(R.id.action_MapboxFragment_to_MenuFragment);
     });
   }
 

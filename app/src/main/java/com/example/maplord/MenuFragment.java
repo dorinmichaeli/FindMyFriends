@@ -9,27 +9,26 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.maplord.databinding.FragmentSecondBinding;
+import com.example.maplord.databinding.FragmentMenuBinding;
 
-public class SecondFragment extends Fragment {
-
-  private FragmentSecondBinding binding;
+public class MenuFragment extends Fragment {
+  private FragmentMenuBinding binding;
 
   @Override
   public View onCreateView(
     LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState
   ) {
-    binding = FragmentSecondBinding.inflate(inflater, container, false);
+    binding = FragmentMenuBinding.inflate(inflater, container, false);
     return binding.getRoot();
   }
 
   public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    binding.buttonSecond.setOnClickListener(view1 -> {
-      NavHostFragment.findNavController(SecondFragment.this)
-        .navigate(R.id.action_SecondFragment_to_LoaderFragment);
+    binding.buttonMenu.setOnClickListener(view1 -> {
+      NavHostFragment.findNavController(MenuFragment.this)
+        .navigate(R.id.action_MenuFragment_to_LoaderFragment);
     });
   }
 
