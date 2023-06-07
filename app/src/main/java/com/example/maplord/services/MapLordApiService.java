@@ -3,12 +3,21 @@ package com.example.maplord.services;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.maplord.BuildConfig;
 import com.example.maplord.api.MapLordApi;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mapbox.geojson.Point;
 
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.util.List;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -36,7 +45,14 @@ public class MapLordApiService {
     Gson gson = new GsonBuilder()
       .create();
 
-    OkHttpClient client = new OkHttpClient.Builder()
+    var builder = new OkHttpClient.Builder();
+
+    if (BuildConfig.DEBUG) {
+      // DANGEROUS - Disable SSL certificate authority validation, this is only used during development.
+      dangerousDisableSslCertificateAuthorityValidation(builder);
+    }
+
+    OkHttpClient client = builder
       // ** MIDDLEWARE **
       // Add the auth token to every request.
       .addInterceptor(chain -> {
@@ -173,5 +189,43 @@ public class MapLordApiService {
 
   private interface CallFinished<T> {
     void apply(Call<T> call, Response<T> response, Throwable t);
+  }
+
+  private static void dangerousDisableSslCertificateAuthorityValidation(OkHttpClient.Builder builder) {
+    // TODO: Remove this when we have a real certificate.
+    // TODO: Document this and explain how and why it's dangerous.
+    var trustAllCerts = new TrustManager[]{
+      new X509TrustManager() {
+        @Override
+        public void checkClientTrusted(X509Certificate[] x509Certificates, String s) {
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] x509Certificates, String s) {
+        }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+          return new X509Certificate[0];
+        }
+      }
+    };
+
+    SSLContext sslContext;
+    try {
+      sslContext = SSLContext.getInstance("SSL");
+    } catch (NoSuchAlgorithmException e) {
+      throw new RuntimeException(e);
+    }
+    try {
+      sslContext.init(null, trustAllCerts, new SecureRandom());
+    } catch (KeyManagementException e) {
+      throw new RuntimeException(e);
+    }
+
+    var socketFactory = sslContext.getSocketFactory();
+    builder
+      .sslSocketFactory(socketFactory, (X509TrustManager) trustAllCerts[0])
+      .hostnameVerifier((hostname, session) -> true);
   }
 }
