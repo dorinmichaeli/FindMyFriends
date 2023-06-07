@@ -10,6 +10,8 @@
   created a specific marker. For example each marker should have a name above it, or a unique
   per-user color.
 
+- Add HTTPS to the API.
+
 - Think about how we can emulate/simulate multiple devices for field testing. Do we need to get
   multiple old Android devices or something?
 - Add live communication between server and client to let the server know when a new marker has been
