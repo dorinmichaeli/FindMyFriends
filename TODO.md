@@ -22,6 +22,7 @@
 - Implement login via google.
 - Fix back navigation from MapboxFragment not working.
 - Find out how to change the app's name and icon in the apps view in the device.
+- Make HTTPS with self-signed certificates work during development.
 
 ## Future
 
