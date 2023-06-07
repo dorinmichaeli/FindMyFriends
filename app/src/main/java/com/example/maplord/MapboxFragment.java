@@ -192,7 +192,15 @@ public class MapboxFragment extends Fragment {
 
     // Create a view annotation for the text
     // label that shows the marker's owner.
-    View view = addViewAnnotation(point, marker.owner);
+    String markerOwner = marker.owner;
+    // Remove the ignored suffix from the marker owner name.
+    // Example: "john.doe@gmail.com" -> "john.doe"
+    final String ignoredSuffix = "@gmail.com";
+    if (markerOwner.endsWith(ignoredSuffix)) {
+      markerOwner = markerOwner.substring(0, markerOwner.length() - ignoredSuffix.length());
+    }
+    // Add an annotation for the marker owner.
+    View view = addViewAnnotation(point, markerOwner);
 
     // Map the annotation info to the mapbox annotation.
     var info = new AnnotationInfo(marker, view);
