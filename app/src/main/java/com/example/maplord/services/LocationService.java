@@ -84,12 +84,16 @@ public class LocationService {
     );
   }
 
-  private void requestPermissions(AppCompatActivity activity, String[] permissions, ActivityResultCallback<Map<String, Boolean>> callback) {
-    ActivityResultLauncher<String[]> locationPermissionRequest =
+  private void requestPermissions(
+    AppCompatActivity activity,
+    String[] permissions,
+    ActivityResultCallback<Map<String, Boolean>> callback
+  ) {
+    ActivityResultLauncher<String[]> permissionRequest =
       activity.registerForActivityResult(
         new ActivityResultContracts.RequestMultiplePermissions(),
         callback
       );
-    locationPermissionRequest.launch(permissions);
+    permissionRequest.launch(permissions);
   }
 }
