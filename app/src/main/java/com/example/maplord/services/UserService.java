@@ -28,5 +28,10 @@ public class UserService {
     }
   }
 
-  // TODO: Move login-related logic from LoginFragment to this class.
+  public String getUserEmail() {
+    assert this.isLoggedIn();
+    return user.getEmail();
+  }
+
+  // TODO: Move login-related logic from LoginActivity to this class.
 }

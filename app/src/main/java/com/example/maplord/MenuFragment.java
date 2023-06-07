@@ -6,13 +6,26 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.maplord.databinding.FragmentMenuBinding;
+import com.example.maplord.services.UserService;
 
 public class MenuFragment extends Fragment {
   private FragmentMenuBinding binding;
+
+  // Services.
+  private UserService userService;
+
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    // Get services.
+    userService = MapLordApp.get(this).getUserService();
+  }
 
   @Override
   public View onCreateView(
@@ -20,6 +33,10 @@ public class MenuFragment extends Fragment {
     Bundle savedInstanceState
   ) {
     binding = FragmentMenuBinding.inflate(inflater, container, false);
+
+    String welcomeMessage = "Welcome, " + userService.getUserEmail();
+    binding.textviewMenu.setText(welcomeMessage);
+
     return binding.getRoot();
   }
 
