@@ -110,6 +110,6 @@ public class LoginFragment extends Fragment {
 
   private void goToAppAfterLogin() {
     NavHostFragment.findNavController(LoginFragment.this)
-      .navigate(R.id.action_LoginFragment_to_FirstFragment);
+      .navigate(R.id.action_LoginFragment_to_SecondFragment);
   }
 }
