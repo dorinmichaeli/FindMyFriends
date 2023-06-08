@@ -26,6 +26,5 @@
     <string name="mapbox_access_token">
         pk.eyJ1IjoiZG9yaW5taWNoYWVsaSIsImEiOiJjbGdjOTkyN2MxaDQ4M2pvNnRnZHZ5bTB3In0.MzwD06EklMmKoV2IAOH3xQ
     </string>
-    <string name="mapbox_red_marker_scale">0.4</string>
     <string name="mapbox_default_camera_zoom">13.0</string>
 </resources>

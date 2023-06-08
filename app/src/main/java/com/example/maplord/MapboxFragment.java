@@ -1,9 +1,11 @@
 package com.example.maplord;
 
+import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -179,8 +181,10 @@ public class MapboxFragment extends Fragment {
     assert markerSource != null;
     assert markerSource instanceof BitmapDrawable;
 
+    DisplayMetrics display = Resources.getSystem().getDisplayMetrics();
+    float markerScale = display.density / 2;
+
     // Configure the point annotation options.
-    double markerScale = ResourceTools.getDouble(this, R.string.mapbox_red_marker_scale);
     Point point = Point.fromLngLat(marker.lon, marker.lat);
     PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions()
       .withPoint(point)
