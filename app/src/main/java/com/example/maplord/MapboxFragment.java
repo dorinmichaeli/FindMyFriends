@@ -192,19 +192,27 @@ public class MapboxFragment extends Fragment {
 
     // Create a view annotation for the text
     // label that shows the marker's owner.
-    String markerOwner = marker.owner;
-    // Remove the ignored suffix from the marker owner name.
-    // Example: "john.doe@gmail.com" -> "john.doe"
-    final String ignoredSuffix = "@gmail.com";
-    if (markerOwner.endsWith(ignoredSuffix)) {
-      markerOwner = markerOwner.substring(0, markerOwner.length() - ignoredSuffix.length());
-    }
+    String markerOwner = sanitizeOwnerName(marker.owner);
     // Add an annotation for the marker owner.
     View view = addViewAnnotation(point, markerOwner);
 
     // Map the annotation info to the mapbox annotation.
     var info = new AnnotationInfo(marker, view);
     markerMap.put(annotation, info);
+  }
+
+  @NonNull
+  private static String sanitizeOwnerName(@Nullable String ownerName) {
+    if (ownerName == null || ownerName.isEmpty()) {
+      return "unknown";
+    }
+    // Remove the ignored suffix from the marker owner name.
+    // Example: "john.doe@gmail.com" -> "john.doe"
+    final String ignoredSuffix = "@gmail.com";
+    if (ownerName.endsWith(ignoredSuffix)) {
+      ownerName = ownerName.substring(0, ownerName.length() - ignoredSuffix.length());
+    }
+    return ownerName;
   }
 
   private void moveCameraTo(MapboxMap map, Point point, double zoom) {
