@@ -1,4 +1,4 @@
-package com.example.maplord;
+package com.example.maplord.fragments;
 
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
@@ -18,11 +18,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.maplord.MapLordApp;
+import com.example.maplord.R;
 import com.example.maplord.api.MapLordApi;
 import com.example.maplord.databinding.AnnotationViewBinding;
 import com.example.maplord.services.LocationService;
 import com.example.maplord.services.MapLordApiService;
 import com.example.maplord.databinding.FragmentMapboxBinding;
+import com.example.maplord.tools.ResourceTools;
 import com.mapbox.maps.ViewAnnotationOptions;
 import com.mapbox.maps.plugin.Plugin;
 import com.mapbox.maps.plugin.annotation.AnnotationConfig;

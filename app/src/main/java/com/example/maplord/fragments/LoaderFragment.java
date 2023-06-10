@@ -1,4 +1,4 @@
-package com.example.maplord;
+package com.example.maplord.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.maplord.MapLordApp;
+import com.example.maplord.R;
 import com.example.maplord.services.LocationService;
 import com.example.maplord.databinding.FragmentLoaderBinding;
 import com.example.maplord.services.MapLordApiService;
