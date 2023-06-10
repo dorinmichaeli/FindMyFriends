@@ -3,29 +3,15 @@ package com.example.maplord;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.maplord.api.MapLordApi;
 import com.example.maplord.services.MapLordApiService;
 import com.example.maplord.services.DialogService;
 import com.example.maplord.services.LocationService;
 import com.example.maplord.services.UserService;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.auth.GetTokenResult;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.util.Objects;
-import java.util.concurrent.ExecutionException;
-
-import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MapLordApp extends Application {
   private Activity currentActivity;
