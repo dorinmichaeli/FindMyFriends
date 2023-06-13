@@ -120,7 +120,7 @@ public final class LoginActivity extends AppCompatActivity {
   }
 
   private void finishLogin(FirebaseUser user) {
-    var intent = new Intent(this, MainActivity.class);
+    var intent = new Intent(this, PrepareActivity.class);
     intent.putExtra("user", user);
     startActivity(intent);
   }

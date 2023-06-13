@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">MapLord</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_prepare">PrepareActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="maplord_api_url">https://maplord.api:3000</string>
 

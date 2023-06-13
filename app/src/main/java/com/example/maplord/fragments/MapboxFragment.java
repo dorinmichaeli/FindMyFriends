@@ -75,15 +75,7 @@ public class MapboxFragment extends Fragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    initGoBackButton();
     initMapboxEverything();
-  }
-
-  private void initGoBackButton() {
-    binding.buttonMapbox.setOnClickListener(view1 -> {
-      NavHostFragment.findNavController(MapboxFragment.this)
-        .navigate(R.id.action_MapboxFragment_to_MenuFragment);
-    });
   }
 
   private void initMapboxEverything() {

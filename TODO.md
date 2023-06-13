@@ -3,7 +3,7 @@
 ## Tasks
 
 - When trying to log in via Google and the user is not logged in in the device, let the user know
-  what happened instead of showing an obscur error.
+  what happened instead of showing an obscure error.
 - Think about how we can emulate/simulate multiple devices for field testing. Do we need to get
   multiple old Android devices or something?
 - Add live communication between server and client to let the server know when a new marker has been

@@ -1,43 +1,39 @@
-package com.example.maplord.fragments;
+package com.example.maplord.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.maplord.MapLordApp;
 import com.example.maplord.R;
 import com.example.maplord.services.LocationService;
-import com.example.maplord.databinding.FragmentLoaderBinding;
 import com.example.maplord.services.MapLordApiService;
+import com.example.maplord.services.UserService;
+import com.google.firebase.auth.FirebaseUser;
 
-public class LoaderFragment extends Fragment {
+public class PrepareActivity extends AppCompatActivity {
   private boolean locationUpdated = false;
   private boolean markerListLoaded = false;
 
   // Dependencies.
   private MapLordApiService apiService;
   private LocationService locationService;
+  private UserService userService;
 
-  @Nullable
   @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+  protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_prepare);
+
     apiService = MapLordApp.get(this).getApiService();
     locationService = MapLordApp.get(this).getLocationService();
+    userService = MapLordApp.get(this).getUserService();
 
-    FragmentLoaderBinding binding = FragmentLoaderBinding.inflate(inflater, container, false);
-    return binding.getRoot();
-  }
-
-  @Override
-  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
+    FirebaseUser user = getIntent().getParcelableExtra("user");
+    userService.setUser(user);
 
     startLoadingLastKnownLocation();
     startLoadingPreExistingMarkers();
@@ -45,7 +41,7 @@ public class LoaderFragment extends Fragment {
 
   private void startLoadingLastKnownLocation() {
     LiveData<Boolean> locationUpdated = locationService.updateLastKnownLocation();
-    locationUpdated.observe(getViewLifecycleOwner(), updated -> {
+    locationUpdated.observe(this, updated -> {
       if (!updated) {
         return;
       }
@@ -56,7 +52,7 @@ public class LoaderFragment extends Fragment {
 
   private void startLoadingPreExistingMarkers() {
     LiveData<Boolean> markersUpdated = apiService.updatePreExistingMarkers();
-    markersUpdated.observe(getViewLifecycleOwner(), updated -> {
+    markersUpdated.observe(this, updated -> {
       if (!updated) {
         return;
       }
@@ -67,8 +63,8 @@ public class LoaderFragment extends Fragment {
 
   private void checkIfEverythingFinished() {
     if (locationUpdated && markerListLoaded) {
-      NavHostFragment.findNavController(LoaderFragment.this)
-        .navigate(R.id.action_LoaderFragment_to_MapboxFragment);
+      var intent = new Intent(this, MainActivity.class);
+      startActivity(intent);
     }
   }
 }

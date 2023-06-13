@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Ask permission to access the device's location. Will be used together with Mapbox. -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".MapLordApp"
@@ -18,7 +18,8 @@
 
         <activity
             android:name=".activities.LoginActivity"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -26,10 +27,12 @@
         </activity>
 
         <activity
+            android:name=".activities.PrepareActivity"
+            android:label="@string/title_activity_prepare" />
+
+        <activity
             android:name=".activities.MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/Theme.MapLord.NoActionBar">
-        </activity>
+            android:label="@string/title_activity_main" />
 
     </application>
 
