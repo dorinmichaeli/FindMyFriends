@@ -5,6 +5,8 @@ import android.os.Bundle;
 import com.example.maplord.MapLordApp;
 import com.example.maplord.R;
 import com.example.maplord.adapter.TabsAdapter;
+import com.example.maplord.services.ApiService;
+import com.example.maplord.services.DialogService;
 import com.example.maplord.services.LocationService;
 
 import androidx.appcompat.app.AppCompatActivity;

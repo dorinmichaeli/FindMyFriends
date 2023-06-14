@@ -24,7 +24,7 @@ public class DialogService {
       .setMessage(message)
       .setCancelable(false)
       .setPositiveButton("OK", (dialog, id) -> {
-        app.getCurrentActivity().finish();
+        app.getCurrentActivity().finishAffinity();
       });
     AlertDialog alert = builder.create();
     alert.show();

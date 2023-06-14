@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.maplord.services.MapLordApiService;
+import com.example.maplord.services.ApiService;
 import com.example.maplord.services.DialogService;
 import com.example.maplord.services.LocationService;
 import com.example.maplord.services.UserService;
@@ -18,7 +18,7 @@ public class MapLordApp extends Application {
 
   // Services
   private DialogService dialogService;
-  private MapLordApiService apiService;
+  private ApiService apiService;
   private LocationService locationService;
   private UserService userService;
 
@@ -32,12 +32,29 @@ public class MapLordApp extends Application {
 
     userService = new UserService();
 
-    apiService = new MapLordApiService(
-      getString(R.string.maplord_api_url),
-      userService,
-      dialogService);
-
     locationService = new LocationService(this);
+  }
+
+  public void initApiService(String authToken, String groupId) {
+    apiService = new ApiService(
+      getString(R.string.maplord_api_url),
+      authToken,
+      groupId
+    );
+    apiService.onError(err -> {
+      currentActivity.runOnUiThread(() -> {
+        String errorMessage;
+        String reportedMessage = err.getMessage();
+        if (reportedMessage == null) {
+          errorMessage = "Error in connection with server. No error message provided.";
+        } else {
+          errorMessage = "Error in connection with server: " + reportedMessage;
+        }
+        dialogService.alert("API error", errorMessage, () -> {
+          // TODO: Do nothing here?
+        });
+      });
+    });
   }
 
   public Activity getCurrentActivity() {
@@ -49,7 +66,7 @@ public class MapLordApp extends Application {
     return dialogService;
   }
 
-  public MapLordApiService getApiService() {
+  public ApiService getApiService() {
     return apiService;
   }
 

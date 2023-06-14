@@ -19,8 +19,18 @@ public class UserService {
     this.user = user;
   }
 
+  public Task<String> getAuthToken() {
+    return user.getIdToken(true).continueWith(task -> {
+      if (!task.isSuccessful()) {
+        throw task.getException();
+      }
+      return task.getResult().getToken();
+    });
+  }
+
   public String getAuthTokenSync() {
     Task<GetTokenResult> authTokenTask = user.getIdToken(false);
+    // Map the task to a task that returns the token string.
     try {
       return Tasks.await(authTokenTask).getToken();
     } catch (ExecutionException | InterruptedException e) {

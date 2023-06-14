@@ -1,10 +1,9 @@
 package com.example.maplord.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ChatMessage {
-  public String userId;
-  public String userEmail;
-  public Date timestamp;
+  public String userName;
+  public LocalDateTime timestamp;
   public String text;
 }

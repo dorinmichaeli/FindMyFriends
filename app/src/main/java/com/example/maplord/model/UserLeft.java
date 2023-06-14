@@ -1,8 +1,8 @@
 package com.example.maplord.model;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 public class UserLeft {
-  public Date timestamp;
+  public LocalDateTime timestamp;
   public String userName;
 }

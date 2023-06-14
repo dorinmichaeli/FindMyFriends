@@ -15,16 +15,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.maplord.MapLordApp;
 import com.example.maplord.R;
-import com.example.maplord.api.MapLordApi;
 import com.example.maplord.databinding.AnnotationViewBinding;
+import com.example.maplord.model.MarkerInfo;
+import com.example.maplord.services.ApiService;
 import com.example.maplord.services.LocationService;
-import com.example.maplord.services.MapLordApiService;
 import com.example.maplord.databinding.FragmentMapboxBinding;
+import com.example.maplord.services.UserService;
 import com.example.maplord.tools.ResourceTools;
 import com.mapbox.maps.ViewAnnotationOptions;
 import com.mapbox.maps.plugin.Plugin;
@@ -53,18 +52,36 @@ public class MapboxFragment extends Fragment {
   private ViewAnnotationManager viewAnnotationManager;
 
   // Dependencies.
-  private MapLordApiService apiService;
+  private ApiService apiService;
+  private UserService userService;
   private LocationService locationService;
 
   // We use this map to find the marker info for a given annotation.
   // This is used when deleting an annotation, as we need to know the
   // marker's id in order to delete it from the server.
-  private final HashMap<PointAnnotation, AnnotationInfo> markerMap = new HashMap<>();
+  private final HashMap<PointAnnotation, AnnotationInfo> annotationMap = new HashMap<>();
+  // We use this map to find the annotation for a given marker id.
+  private final HashMap<String, AnnotationInfo> markerIdMap = new HashMap<>();
 
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     apiService = MapLordApp.get(this).getApiService();
+    userService = MapLordApp.get(this).getUserService();
     locationService = MapLordApp.get(this).getLocationService();
+
+    apiService.onMarkerAdded(markerInfo -> {
+      requireActivity().runOnUiThread(() -> {
+        // Create a visual annotation for the marker created by the API.
+        createAnnotationForMarker(markerInfo);
+      });
+    });
+
+    apiService.onMarkerDeleted(markerInfo -> {
+      requireActivity().runOnUiThread(() -> {
+        // Delete the visual annotation for the marker deleted by the API.
+        deleteAnnotationForMarker(markerInfo);
+      });
+    });
 
     binding = FragmentMapboxBinding.inflate(inflater, container, false);
     mapView = binding.mapView;
@@ -76,6 +93,11 @@ public class MapboxFragment extends Fragment {
     super.onViewCreated(view, savedInstanceState);
 
     initMapboxEverything();
+
+    // TODO: Init old markers in a better way.
+    for (MarkerInfo marker : apiService.getLoadedMarkers()) {
+      createAnnotationForMarker(marker);
+    }
   }
 
   private void initMapboxEverything() {
@@ -83,7 +105,6 @@ public class MapboxFragment extends Fragment {
     initPointAnnotationManager();
     initViewAnnotationManager();
     initCameraLocation();
-    initPreExistingMarkers();
     initCreateMarkerOnClick();
   }
 
@@ -101,23 +122,17 @@ public class MapboxFragment extends Fragment {
     // Delete a marker when a user clicks on it.
     pointAnnotationManager.addClickListener(annotation -> {
       // Look up the marker info to know its id.
-      AnnotationInfo info = markerMap.get(annotation);
+      AnnotationInfo info = annotationMap.get(annotation);
       assert info != null;
+
+      if (!userService.getUserEmail().equals(info.markerInfo.owner)) {
+        // Can't delete a marker that you don't own.
+        return true;
+      }
+
       // Delete the marker in the API.
-      LiveData<MapLordApi.MarkerDeletionResult> deletionResult = apiService.apiDeleteMarker(info.markerInfo);
-      // Delete the equivalent annotation in MapBox.
-      deletionResult.observe(getViewLifecycleOwner(), result -> {
-        // Only delete if the server has deleted the marker.
-        if (!result.deleted) {
-          return;
-        }
-        // Delete the point annotation (marker image) from MapBox.
-        pointAnnotationManager.delete(annotation);
-        // Delete the view annotation (text label) from MapBox.
-        viewAnnotationManager.removeViewAnnotation(info.viewAnnotation);
-        // Delete the marker info from the HashMap.
-        markerMap.remove(annotation);
-      });
+      apiService.deleteMarker(info.markerInfo.id);
+
       return true;
     });
   }
@@ -127,6 +142,8 @@ public class MapboxFragment extends Fragment {
   }
 
   private View addViewAnnotation(Point point, String text) {
+    // TODO: The following lines throw an error if lat/lon are not in range. Consider handling that error somehow?
+
     var options = new ViewAnnotationOptions.Builder()
       .geometry(point)
       .allowOverlap(true)
@@ -147,30 +164,17 @@ public class MapboxFragment extends Fragment {
     moveCameraTo(map, newCameraLocation, cameraZoom);
   }
 
-  private void initPreExistingMarkers() {
-    var markerList = apiService.getPreExistingMarkers();
-    for (MapLordApi.MarkerInfo marker : markerList) {
-      createAnnotationForMarker(marker);
-    }
-  }
-
   private void initCreateMarkerOnClick() {
     // Add a marker on the map wherever a user clicks.
     GesturesPlugin gesturesPlugin = GesturesUtils.getGestures(mapView);
 
     gesturesPlugin.addOnMapClickListener(point -> {
-      LiveData<MapLordApi.MarkerInfo> createdMarkerInfo = apiService.apiCreateMarker(point);
-
-      createdMarkerInfo.observe(getViewLifecycleOwner(), marker -> {
-        // Create a visual annotation for the marker created by the API.
-        createAnnotationForMarker(marker);
-      });
-
+      apiService.addMarker(point.latitude(), point.longitude());
       return true;
     });
   }
 
-  private void createAnnotationForMarker(MapLordApi.MarkerInfo marker) {
+  private void createAnnotationForMarker(MarkerInfo marker) {
     // Get the marker image.
     Drawable markerSource = AppCompatResources.getDrawable(requireContext(), R.drawable.red_marker);
     assert markerSource != null;
@@ -195,9 +199,29 @@ public class MapboxFragment extends Fragment {
     // Add an annotation for the marker owner.
     View view = addViewAnnotation(point, markerOwner);
 
-    // Map the annotation info to the mapbox annotation.
-    var info = new AnnotationInfo(marker, view);
-    markerMap.put(annotation, info);
+    // Add the marker to our hashmaps.
+    var info = new AnnotationInfo(annotation, marker, view);
+    annotationMap.put(annotation, info);
+    markerIdMap.put(marker.id, info);
+  }
+
+  private void deleteAnnotationForMarker(MarkerInfo markerInfo) {
+    // Get the annotation for the marker that was deleted.
+    AnnotationInfo info = markerIdMap.get(markerInfo.id);
+    if (info == null) {
+      // No annotation for this marker id, not much we can do.
+      return;
+    }
+    PointAnnotation annotation = info.pointAnnotation;
+
+    // Only delete if the server has deleted the marker.
+    // Delete the point annotation (marker image) from MapBox.
+    pointAnnotationManager.delete(annotation);
+    // Delete the view annotation (text label) from MapBox.
+    viewAnnotationManager.removeViewAnnotation(info.viewAnnotation);
+    // Delete the relevant entries from our hashmaps.
+    annotationMap.remove(annotation);
+    markerIdMap.remove(markerInfo.id);
   }
 
   @NonNull
@@ -224,10 +248,12 @@ public class MapboxFragment extends Fragment {
   }
 
   static class AnnotationInfo {
-    public final MapLordApi.MarkerInfo markerInfo;
+    public final PointAnnotation pointAnnotation;
+    public final MarkerInfo markerInfo;
     public final View viewAnnotation;
 
-    AnnotationInfo(MapLordApi.MarkerInfo markerInfo, View viewAnnotation) {
+    AnnotationInfo(PointAnnotation pointAnnotation, MarkerInfo markerInfo, View viewAnnotation) {
+      this.pointAnnotation = pointAnnotation;
       this.markerInfo = markerInfo;
       this.viewAnnotation = viewAnnotation;
     }

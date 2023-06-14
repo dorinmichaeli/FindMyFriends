@@ -9,17 +9,19 @@ import androidx.lifecycle.LiveData;
 
 import com.example.maplord.MapLordApp;
 import com.example.maplord.R;
+import com.example.maplord.services.DialogService;
 import com.example.maplord.services.LocationService;
-import com.example.maplord.services.MapLordApiService;
 import com.example.maplord.services.UserService;
 import com.google.firebase.auth.FirebaseUser;
 
 public class PrepareActivity extends AppCompatActivity {
   private boolean locationUpdated = false;
-  private boolean markerListLoaded = false;
+  private boolean authTokenReceived = false;
+  // TODO: Load marker list here, probably.
+  //private boolean markerListLoaded = false;
 
   // Dependencies.
-  private MapLordApiService apiService;
+  private DialogService dialogService;
   private LocationService locationService;
   private UserService userService;
 
@@ -28,15 +30,28 @@ public class PrepareActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_prepare);
 
-    apiService = MapLordApp.get(this).getApiService();
+    dialogService = MapLordApp.get(this).getDialogService();
     locationService = MapLordApp.get(this).getLocationService();
     userService = MapLordApp.get(this).getUserService();
 
     FirebaseUser user = getIntent().getParcelableExtra("user");
     userService.setUser(user);
 
+    // TODO: This should be done in a better way.
+    userService.getAuthToken().addOnCompleteListener(task -> {
+      if (!task.isSuccessful()) {
+        runOnUiThread(() -> {
+          dialogService.fatalError("Failed to get auth token: " + task.getException().getMessage());
+        });
+        return;
+      }
+      MapLordApp.get(this).initApiService(task.getResult(), "xyz");
+      // TODO: Should probably listen to welcome event and store chat messages and markers here.
+      authTokenReceived = true;
+      checkIfEverythingFinished();
+    });
+
     startLoadingLastKnownLocation();
-    startLoadingPreExistingMarkers();
   }
 
   private void startLoadingLastKnownLocation() {
@@ -50,19 +65,8 @@ public class PrepareActivity extends AppCompatActivity {
     });
   }
 
-  private void startLoadingPreExistingMarkers() {
-    LiveData<Boolean> markersUpdated = apiService.updatePreExistingMarkers();
-    markersUpdated.observe(this, updated -> {
-      if (!updated) {
-        return;
-      }
-      this.markerListLoaded = true;
-      checkIfEverythingFinished();
-    });
-  }
-
   private void checkIfEverythingFinished() {
-    if (locationUpdated && markerListLoaded) {
+    if (locationUpdated && authTokenReceived) {
       var intent = new Intent(this, MainActivity.class);
       startActivity(intent);
     }
