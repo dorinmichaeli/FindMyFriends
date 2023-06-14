@@ -40,6 +40,7 @@ public class ApiService {
   private final WebSocket socket;
 
   // TODO: These should probably not be on the API itself.
+  private List<ChatMessage> loadedMessages = null;
   private List<MarkerInfo> loadedMarkers = null;
 
   public ApiService(String websocketUrl, String authToken, String groupId) {
@@ -74,6 +75,11 @@ public class ApiService {
 
     Log.d(TAG, "Connecting to server...");
     socket = client.newWebSocket(request, new WsApiListener());
+  }
+
+  public List<ChatMessage> getLoadedMessages() {
+    assert loadedMessages != null;
+    return loadedMessages;
   }
 
   public List<MarkerInfo> getLoadedMarkers() {
@@ -227,8 +233,11 @@ public class ApiService {
   private void handleWelcome(String messageJson) {
     Log.d(TAG, "Received welcome message from server: " + messageJson);
     WelcomeMessage welcomeMessage = gson.fromJson(messageJson, WelcomeMessage.class);
-    // TODO: Do the next line outside!
+
+    // TODO: Do the next 2 lines outside!
+    loadedMessages = Arrays.asList(welcomeMessage.chatHistory);
     loadedMarkers = Arrays.asList(welcomeMessage.markerList);
+
     notifyWelcomeMessage(welcomeMessage);
   }
 

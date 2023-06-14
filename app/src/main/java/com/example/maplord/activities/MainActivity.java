@@ -47,13 +47,13 @@ public class MainActivity extends AppCompatActivity {
       (tab, position) -> {
         switch (position) {
           case 0:
-            tab.setText("Group");
+            tab.setText("Map");
             break;
           case 1:
             tab.setText("Chat");
             break;
           case 2:
-            tab.setText("Map");
+            tab.setText("Group");
             break;
         }
       }).attach();
