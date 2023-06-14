@@ -30,12 +30,11 @@ public class PrepareActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_prepare);
 
+    String groupId = getIntent().getStringExtra("groupId");
+
     dialogService = MapLordApp.get(this).getDialogService();
     locationService = MapLordApp.get(this).getLocationService();
     userService = MapLordApp.get(this).getUserService();
-
-    FirebaseUser user = getIntent().getParcelableExtra("user");
-    userService.setUser(user);
 
     // TODO: This should be done in a better way.
     userService.getAuthToken().addOnCompleteListener(task -> {
@@ -45,7 +44,7 @@ public class PrepareActivity extends AppCompatActivity {
         });
         return;
       }
-      MapLordApp.get(this).initApiService(task.getResult(), "xyz");
+      MapLordApp.get(this).initApiService(task.getResult(), groupId);
       // TODO: Should probably listen to welcome event and store chat messages and markers here.
       authTokenReceived = true;
       checkIfEverythingFinished();

@@ -31,6 +31,10 @@
         </activity>
 
         <activity
+            android:name=".activities.GroupSelectActivity"
+            android:label="@string/title_activity_group_select" />
+
+        <activity
             android:name=".activities.PrepareActivity"
             android:label="@string/title_activity_prepare" />
 

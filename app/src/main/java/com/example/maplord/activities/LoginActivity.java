@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.maplord.MapLordApp;
 import com.example.maplord.R;
 import com.example.maplord.services.DialogService;
+import com.example.maplord.services.UserService;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
@@ -32,6 +33,7 @@ public final class LoginActivity extends AppCompatActivity {
 
   // Services.
   private DialogService dialogService;
+  private UserService userService;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public final class LoginActivity extends AppCompatActivity {
 
     // Get services.
     dialogService = MapLordApp.get(this).getDialogService();
+    userService = MapLordApp.get(this).getUserService();
 
     // Get the Firebase Auth provider.
     firebaseAuth = FirebaseAuth.getInstance();
@@ -111,7 +114,8 @@ public final class LoginActivity extends AppCompatActivity {
       .addOnCompleteListener(this, task -> {
         if (task.isSuccessful()) {
           FirebaseUser user = firebaseAuth.getCurrentUser();
-          finishLogin(user);
+          userService.setUser(user);
+          finishLogin();
         } else {
           var err = task.getException();
           dialogService.fatalError("Could not sign in with credentials: " + err);
@@ -119,9 +123,8 @@ public final class LoginActivity extends AppCompatActivity {
       });
   }
 
-  private void finishLogin(FirebaseUser user) {
-    var intent = new Intent(this, PrepareActivity.class);
-    intent.putExtra("user", user);
+  private void finishLogin() {
+    var intent = new Intent(this, GroupSelectActivity.class);
     startActivity(intent);
   }
 }

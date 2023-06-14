@@ -67,6 +67,7 @@ public class MapLordApp extends Application {
   }
 
   public ApiService getApiService() {
+    assert apiService != null;
     return apiService;
   }
 
