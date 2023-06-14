@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment;
 import com.example.maplord.MapLordApp;
 import com.example.maplord.R;
 import com.example.maplord.databinding.FragmentChatBinding;
-import com.example.maplord.databinding.FragmentMapboxBinding;
 import com.example.maplord.model.ChatMessage;
 import com.example.maplord.services.ApiService;
 
@@ -31,17 +30,16 @@ public class ChatFragment extends Fragment {
   private static final int MAX_ITEMS = 30;
 
   private FragmentChatBinding binding;
-
   private ListView listView;
   private ArrayList<String> messageList;
   private ArrayAdapter<String> listAdapter;
 
   // Dependencies.
-  private ApiService wsApi;
+  private ApiService apiService;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    wsApi = MapLordApp.get(this).getApiService();
+    apiService = MapLordApp.get(this).getApiService();
 
     binding = FragmentChatBinding.inflate(inflater, container, false);
 
@@ -50,31 +48,31 @@ public class ChatFragment extends Fragment {
     // Create the underlying data source.
     messageList = new ArrayList<>();
     // Create the collection adapter.
-    listAdapter = new ArrayAdapter<>(requireContext(), R.layout.listview_item, messageList);
+    listAdapter = new ArrayAdapter<>(requireContext(), R.layout.chat_message_item, messageList);
     // Set the adapter.
     listView.setAdapter(listAdapter);
 
-    wsApi.onChatMessageReceived(chatMessage -> {
+    apiService.onChatMessageReceived(chatMessage -> {
       Log.d(TAG, "onChatMessageReceived");
       addChatMessageToListView(chatMessage);
     });
-    wsApi.onUserJoined(userJoined -> {
+    apiService.onUserJoined(userJoined -> {
       Log.d(TAG, "onUserJoined");
       var message = String.format("User %s has joined the chat.", userJoined.userName);
       addItemToListView(message);
     });
-    wsApi.onUserLeft(userLeft -> {
+    apiService.onUserLeft(userLeft -> {
       Log.d(TAG, "onUserLeft");
       var message = String.format("User %s has left the chat.", userLeft.userName);
       addItemToListView(message);
     });
-    wsApi.onMarkerAdded(newMarker -> {
+    apiService.onMarkerAdded(newMarker -> {
       Log.d(TAG, "onMarkerAdded");
       String message = String.format("Marker created at %f,%f (id: %s) by %s: ",
         newMarker.lat, newMarker.lon, newMarker.id, newMarker.owner);
       addItemToListView(message);
     });
-    wsApi.onMarkerDeleted(deletedMarker -> {
+    apiService.onMarkerDeleted(deletedMarker -> {
       Log.d(TAG, "onMarkerDeleted");
       String message = String.format("Marker deleted at %f,%f (id: %s) by %s",
         deletedMarker.lat, deletedMarker.lon, deletedMarker.id, deletedMarker.owner);
@@ -94,7 +92,7 @@ public class ChatFragment extends Fragment {
         return;
       }
       // Send the message to the server.
-      wsApi.sendChatMessage(newMessage);
+      apiService.sendChatMessage(newMessage);
       // Clear the input field
       inputText.getText().clear();
 
@@ -111,7 +109,7 @@ public class ChatFragment extends Fragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    List<ChatMessage> messageHistory = wsApi.getLoadedMessages();
+    List<ChatMessage> messageHistory = apiService.getLoadedMessages();
     for (ChatMessage chatMessage : messageHistory) {
       addChatMessageToListView(chatMessage);
     }

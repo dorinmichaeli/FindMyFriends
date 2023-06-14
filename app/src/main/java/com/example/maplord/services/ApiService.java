@@ -42,6 +42,7 @@ public class ApiService {
   // TODO: These should probably not be on the API itself.
   private List<ChatMessage> loadedMessages = null;
   private List<MarkerInfo> loadedMarkers = null;
+  private List<String> loadedUsers = null;
 
   public ApiService(String websocketUrl, String authToken, String groupId) {
     gson = new GsonBuilder()
@@ -85,6 +86,11 @@ public class ApiService {
   public List<MarkerInfo> getLoadedMarkers() {
     assert loadedMarkers != null;
     return loadedMarkers;
+  }
+
+  public List<String> getLoadedUsers() {
+    assert loadedUsers != null;
+    return loadedUsers;
   }
 
   public void sendChatMessage(String messageText) {
@@ -237,6 +243,7 @@ public class ApiService {
     // TODO: Do the next 2 lines outside!
     loadedMessages = Arrays.asList(welcomeMessage.chatHistory);
     loadedMarkers = Arrays.asList(welcomeMessage.markerList);
+    loadedUsers = Arrays.asList(welcomeMessage.usersInGroup);
 
     notifyWelcomeMessage(welcomeMessage);
   }

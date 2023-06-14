@@ -5,4 +5,5 @@ public class WelcomeMessage {
   public String groupName;
   public ChatMessage[] chatHistory;
   public MarkerInfo[] markerList;
+  public String[] usersInGroup;
 }
