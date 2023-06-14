@@ -2,14 +2,19 @@
 
 ## Tasks
 
+- Create group functionality. A user should be able to create a group and let other users join it by
+  giving them the id.
+- Add group template for social events. A group template should contain predetermined markers set by
+  the creator of the template. When creating a group from a template, the markers should be added
+  to the group. These markers will have a different color, and no user will be able to remove them.
+- Make a user's own markers a different color.
 - When trying to log in via Google and the user is not logged in in the device, let the user know
   what happened instead of showing an obscure error.
-- Think about how we can emulate/simulate multiple devices for field testing. Do we need to get
-  multiple old Android devices or something?
-- Add live communication between server and client to let the server know when a new marker has been
-  added by another user in their group so that the user can immediately add the marker locally.
 
-- (Done) Add HTTPS to the API.
+- (DONE) Add live communication between server and client to let the server know when a new marker
+  has been
+  added by another user in their group so that the user can immediately add the marker locally.
+- (DONE) Add HTTPS to the API.
 - (DONE) Add error handling to the app.
 - (DONE) Organize the code in the app.
 - (DONE) Add a loader to the app.
@@ -20,25 +25,28 @@
 
 ## Secondary tasks
 
-- Fix back navigation from MapboxFragment not working.
 - Find out how to change the app's name and icon in the apps view in the device.
-
+- Think about how we can emulate/simulate multiple devices for field testing. Do we need to get
+  multiple old Android devices or something?
+-
+- (N/A) Fix back navigation from MapboxFragment not working.
 - (Done) Make HTTPS with self-signed certificates work during development.
 - (Done) Implement login via google.
 
 ## Future
 
-- Implement user groups. A user should only see the markers created by the users in the same group
+- (DONE) Implement user groups. A user should only see the markers created by the users in the same
+  group
   as them.
-- See list of users in your group.
-- Chat room with other users in your group.
+- (DONE) See list of users in your group.
+- (DONE) Chat room with other users in your group.
 - See live locations of all users in your group.
 
 ## Research
 
 - (DONE) Find out how to perform dependency injection on fragments without throwing everything on
   the MainActivity class.
-- Find out what are *-BoM versions of libraries (e.g. Firebase and JUnit).
+- (DONE) Find out what are *-BoM versions of libraries (e.g. Firebase and JUnit).
 
 ## Links of possible interest
 
