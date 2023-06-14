@@ -95,7 +95,7 @@ public class ApiService {
 
   public void sendChatMessage(String messageText) {
     String messageJson = gson.toJson(messageText, String.class);
-    socket.send(ClientMessageType.CHAT_MESSAGE + messageJson);
+    socket.send(ClientMessageType.ADD_CHAT_MESSAGE + messageJson);
   }
 
   public void addMarker(double lat, double lon) {
@@ -184,7 +184,7 @@ public class ApiService {
   }
 
   private static class ClientMessageType {
-    public static final char CHAT_MESSAGE = 'z';
+    public static final char ADD_CHAT_MESSAGE = 'z';
     public static final char ADD_MARKER = 'y';
     public static final char DELETE_MARKER = 'x';
   }
