@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:padding="16dp">
-
-  <EditText
-    android:id="@+id/editTextGroupId"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="Group id"
-    android:inputType="text"
-    android:layout_centerInParent="true"
-    android:textAlignment="center"
-    />
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
-  <Button
-    android:id="@+id/buttonSendGroupId"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Join group"
-    android:layout_below="@id/editTextGroupId"
-    android:layout_centerHorizontal="true"
-    android:layout_marginTop="20dp" />
+    <EditText
+        android:id="@+id/editTextGroupId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:hint="Group id"
+        android:inputType="text"
+        android:textAlignment="center"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/buttonSendGroupId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextGroupId"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:paddingHorizontal="36dp"
+        android:paddingVertical="7dp"
+        android:text="Join group"
+        android:textSize="16sp" />
 
 </RelativeLayout>
