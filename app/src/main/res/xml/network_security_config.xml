@@ -1,6 +1,0 @@
-<!-- Allow cleartext communication with localhost. -->
-<network-security-config>
-  <domain-config cleartextTrafficPermitted="true">
-    <domain includeSubdomains="true">maplord.api</domain>
-  </domain-config>
-</network-security-config>

@@ -3,7 +3,7 @@
     <string name="title_activity_login">Login</string>
     <string name="title_activity_group_select">Join group</string>
     <string name="title_activity_prepare">Loading…</string>
-    <string name="maplord_api_url">http://maplord.api:8080</string>
+    <string name="maplord_api_url">https://api.mypartymap.com:8080</string>
 
     <string name="next_fragment">Next</string>
 

@@ -1,5 +1,7 @@
 package com.example.maplord.services;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -26,6 +28,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import okhttp3.OkHttpClient;
@@ -35,9 +38,12 @@ import okhttp3.WebSocketListener;
 
 public class ApiService {
   private static final String TAG = "WsApiService";
+  private static final int WEBSOCKET_PING_INTERVAL_MS = 5_000;
+  private static final int WEBSOCKET_RECONNECT_ATTEMPT_INTERVAL_MS = 3_000;
 
+  private final String websocketUrl;
   private final Gson gson;
-  private final WebSocket socket;
+  private WebSocket socket;
 
   // TODO: These should probably not be on the API itself.
   private List<ChatMessage> loadedMessages = null;
@@ -60,21 +66,41 @@ public class ApiService {
       })
       .create();
 
-    var client = new OkHttpClient.Builder()
-      .build();
 
-
-    // Make sure to escape the query parameters.
+    // Construct the full connection URL, which also includes the auth token
+    // and the group id to connect to.
     authToken = encodeURIComponent(authToken);
     groupId = encodeURIComponent(groupId);
-    // Construct the full URL.
-    String fullUrl = String.format("%s?authToken=%s&groupId=%s", websocketUrl, authToken, groupId);
+    this.websocketUrl = String.format("%s?authToken=%s&groupId=%s", websocketUrl, authToken, groupId);
 
-    var request = new Request.Builder()
-      .url(fullUrl)
+    // Connect to the websocket API.
+    createWebSocket();
+  }
+
+  private void reconnectWebSocket() {
+    // Make sure the current socket is closed, before we get rid of the reference.
+    socket.close(1000, "Reconnecting...");
+
+    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+      createWebSocket();
+    }, WEBSOCKET_RECONNECT_ATTEMPT_INTERVAL_MS);
+  }
+
+  private void createWebSocket() {
+    Log.d(TAG, "Connecting to WebSocket API...");
+
+    var client = new OkHttpClient.Builder()
+      // Send pings periodically, otherwise the server may close the websocket
+      // connection due to inactivity.
+      .pingInterval(WEBSOCKET_PING_INTERVAL_MS, TimeUnit.MILLISECONDS)
+      .retryOnConnectionFailure(true)
       .build();
 
-    Log.d(TAG, "Connecting to server...");
+    // Make sure to escape the query parameters.
+    var request = new Request.Builder()
+      .url(websocketUrl)
+      .build();
+
     socket = client.newWebSocket(request, new WsApiListener());
   }
 
@@ -170,6 +196,8 @@ public class ApiService {
     public void onFailure(@NonNull WebSocket webSocket, @NonNull Throwable t, okhttp3.Response response) {
       Log.d(TAG, "Socket failure: " + t.getMessage());
       notifyErrorReportedByServer(t);
+      // Try to reestablish the connection with the API.
+      reconnectWebSocket();
     }
   }
 

@@ -1,11 +1,14 @@
 package com.example.maplord.services;
 
+import android.view.View;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
 import com.example.maplord.MapLordApp;
 import com.example.maplord.R;
 import com.example.maplord.tools.Action;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -45,5 +48,17 @@ public class DialogService {
       });
     AlertDialog alert = builder.create();
     alert.show();
+  }
+
+  public void snackbar(String message) {
+    View view = app.getCurrentActivity().findViewById(android.R.id.content);
+    var snackbar = Snackbar.make(
+      view,
+      message,
+      Snackbar.LENGTH_INDEFINITE);
+    snackbar.setAction("CLOSE", v -> {
+      snackbar.dismiss();
+    });
+    snackbar.show();
   }
 }

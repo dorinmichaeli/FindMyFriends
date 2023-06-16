@@ -3,6 +3,7 @@ package com.example.maplord;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +15,8 @@ import com.example.maplord.services.LocationService;
 import com.example.maplord.services.UserService;
 
 public class MapLordApp extends Application {
+  private static final String Tag = "MapLordApp";
+
   private Activity currentActivity;
 
   // Services
@@ -41,18 +44,16 @@ public class MapLordApp extends Application {
       authToken,
       groupId
     );
-    apiService.onError(err -> {
+    apiService.onConnectedToServer(() -> {
       currentActivity.runOnUiThread(() -> {
-        String errorMessage;
-        String reportedMessage = err.getMessage();
-        if (reportedMessage == null) {
-          errorMessage = "Error in connection with server. No error message provided.";
-        } else {
-          errorMessage = "Error in connection with server: " + reportedMessage;
-        }
-        dialogService.alert("API error", errorMessage, () -> {
-          // TODO: Do nothing here?
-        });
+        dialogService.snackbar("Connected to server.");
+      });
+    });
+    apiService.onError(err -> {
+      Log.d(Tag, "API error: " + err.getMessage());
+      currentActivity.runOnUiThread(() -> {
+        String errorMessage = "Connection error, trying to reconnect...";
+        dialogService.snackbar(errorMessage);
       });
     });
   }
