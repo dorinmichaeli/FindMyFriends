@@ -9,14 +9,14 @@ import androidx.lifecycle.LiveData;
 
 import com.example.maplord.MapLordApp;
 import com.example.maplord.R;
+import com.example.maplord.services.ApiService;
 import com.example.maplord.services.DialogService;
 import com.example.maplord.services.LocationService;
 import com.example.maplord.services.UserService;
-import com.google.firebase.auth.FirebaseUser;
 
 public class PrepareActivity extends AppCompatActivity {
   private boolean locationUpdated = false;
-  private boolean authTokenReceived = false;
+  private boolean welcomeMessageReceived = false;
   // TODO: Load marker list here, probably.
   //private boolean markerListLoaded = false;
 
@@ -44,10 +44,13 @@ public class PrepareActivity extends AppCompatActivity {
         });
         return;
       }
+
       MapLordApp.get(this).initApiService(task.getResult(), groupId);
-      // TODO: Should probably listen to welcome event and store chat messages and markers here.
-      authTokenReceived = true;
-      checkIfEverythingFinished();
+      ApiService apiService = MapLordApp.get(this).getApiService();
+      apiService.onWelcomeMessage(message -> {
+        welcomeMessageReceived = true;
+        checkIfEverythingFinished();
+      });
     });
 
     startLoadingLastKnownLocation();
@@ -65,7 +68,7 @@ public class PrepareActivity extends AppCompatActivity {
   }
 
   private void checkIfEverythingFinished() {
-    if (locationUpdated && authTokenReceived) {
+    if (locationUpdated && welcomeMessageReceived) {
       var intent = new Intent(this, MainActivity.class);
       startActivity(intent);
     }
