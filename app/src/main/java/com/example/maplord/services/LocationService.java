@@ -6,7 +6,6 @@ import android.location.Location;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.LiveData;
@@ -17,10 +16,9 @@ import com.example.maplord.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.CancellationToken;
-import com.google.android.gms.tasks.OnTokenCanceledListener;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class LocationService {
   private final MapLordApp app;
@@ -37,7 +35,7 @@ public class LocationService {
 
     if (ActivityCompat.checkSelfPermission(app, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
       && ActivityCompat.checkSelfPermission(app, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-      onLocationPermissionRefused();
+      showFatalDialogLocationPermissionMissing();
     }
 
     fusedLocationClient
@@ -61,7 +59,7 @@ public class LocationService {
     return lastKnownLocation;
   }
 
-  private void onLocationPermissionRefused() {
+  public void showFatalDialogLocationPermissionMissing() {
     // Our application cannot work without fine location access, and so if
     // the user does not grant it there's nothing else we can do other than
     // let the user know and exit the application.
@@ -73,17 +71,25 @@ public class LocationService {
       .fatalError(app.getString(R.string.location_permission_denied_exit_message));
   }
 
-  public void requestLocationPermissions(AppCompatActivity activity) {
+  public void requestLocationPermissions(AppCompatActivity activity, Consumer<Boolean> callback) {
     requestPermissions(
       activity,
       new String[]{
         android.Manifest.permission.ACCESS_FINE_LOCATION,
       },
       result -> {
-        Boolean fineLocationGranted = result.getOrDefault(android.Manifest.permission.ACCESS_FINE_LOCATION, false);
-        if (fineLocationGranted == null || !fineLocationGranted) {
-          onLocationPermissionRefused();
+        // Permission request process has completed.
+
+        // Check if the user has granted fine location access.
+        Boolean fineLocationGranted = result
+          .getOrDefault(android.Manifest.permission.ACCESS_FINE_LOCATION, false);
+
+        if (fineLocationGranted == null) {
+          // Treat null as false.
+          fineLocationGranted = false;
         }
+
+        callback.accept(fineLocationGranted);
       }
     );
   }

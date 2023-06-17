@@ -15,22 +15,14 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MainActivity extends AppCompatActivity {
-  // Dependencies.
-  private LocationService locationService;
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    locationService = MapLordApp.get(this).getLocationService();
 
     ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
     setContentView(binding.getRoot());
 
     initTabs();
-
-    // TODO: Should this be done in the very first activity?
-    requestAppPermissions();
   }
 
   private void initTabs() {
@@ -55,9 +47,5 @@ public class MainActivity extends AppCompatActivity {
             break;
         }
       }).attach();
-  }
-
-  private void requestAppPermissions() {
-    locationService.requestLocationPermissions(this);
   }
 }

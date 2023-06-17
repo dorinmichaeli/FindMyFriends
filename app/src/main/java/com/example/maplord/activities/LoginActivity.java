@@ -91,7 +91,7 @@ public final class LoginActivity extends AppCompatActivity {
       })
       .addOnFailureListener(this, err -> {
         // TODO: No saved credentials found. Launch the One Tap sign-up flow, or
-        // do nothing and continue presenting the signed-out UI.
+        //  do nothing and continue presenting the signed-out UI.
         dialogService.fatalError("Could not log in: " + err);
       });
   }
