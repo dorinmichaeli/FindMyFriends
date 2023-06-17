@@ -83,3 +83,10 @@ Whenever some code example mentions MapBox "plugins", it probably uses the old A
 In the newer API (v10) the plugins are now part of the core API.
 
 [Link](https://docs.mapbox.com/android/maps/guides/#mapbox-android-plugin
+
+
+## Firebase issues
+
+### com.google.android.gms.common.api.UnsupportedApiCallException: Missing Feature{name=auth_api_credentials_begin_sign_in, version=8}
+
+Removing the SHA1 fingerprint from the Firebase console and adding it again fixed the issue. 
