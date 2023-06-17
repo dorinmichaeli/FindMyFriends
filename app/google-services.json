@@ -14,7 +14,31 @@
       },
       "oauth_client": [
         {
-          "client_id": "73081067599-k0l0jtfhudbp8ddjg7veh3utq27vlno1.apps.googleusercontent.com",
+          "client_id": "73081067599-0m814vtvjcd2rerpa93s8sp4k8j4c4lc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.maplord",
+            "certificate_hash": "2bcb9b5e21b542bd3f52501edf9ae9dc7e579893"
+          }
+        },
+        {
+          "client_id": "73081067599-g5p27lgn45rrbvkh7j3fhqtt5oo7squf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.maplord",
+            "certificate_hash": "8098b4bcfa0538f5886d1ebfb2fb2c1d9af6f626"
+          }
+        },
+        {
+          "client_id": "73081067599-vnnm6aod1qb7nj4tklm4vatc96cuaosu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.maplord",
+            "certificate_hash": "a1c725f4f84a27f6a8272d1d755e5e40991a5522"
+          }
+        },
+        {
+          "client_id": "73081067599-o9l0v1htd3ieie4mu0taki47o4fgr5uf.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
