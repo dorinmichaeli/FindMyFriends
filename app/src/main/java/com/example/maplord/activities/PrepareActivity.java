@@ -47,7 +47,7 @@ public class PrepareActivity extends AppCompatActivity {
 
       MapLordApp.get(this).initApiService(task.getResult(), groupId);
       ApiService apiService = MapLordApp.get(this).getApiService();
-      apiService.onWelcomeMessage(message -> {
+      apiService.onConnectedToServer(() -> {
         welcomeMessageReceived = true;
         checkIfEverythingFinished();
       });

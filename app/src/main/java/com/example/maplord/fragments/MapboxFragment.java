@@ -69,7 +69,18 @@ public class MapboxFragment extends Fragment {
     userService = MapLordApp.get(this).getUserService();
     locationService = MapLordApp.get(this).getLocationService();
 
-    apiService.onMarkerAdded(markerInfo -> {
+    binding = FragmentMapboxBinding.inflate(inflater, container, false);
+    mapView = binding.mapView;
+    return binding.getRoot();
+  }
+
+  @Override
+  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+
+    initMapboxEverything();
+
+    apiService.onMarkerAdded((markerInfo, isNew) -> {
       requireActivity().runOnUiThread(() -> {
         // Create a visual annotation for the marker created by the API.
         createAnnotationForMarker(markerInfo);
@@ -82,22 +93,6 @@ public class MapboxFragment extends Fragment {
         deleteAnnotationForMarker(markerInfo);
       });
     });
-
-    binding = FragmentMapboxBinding.inflate(inflater, container, false);
-    mapView = binding.mapView;
-    return binding.getRoot();
-  }
-
-  @Override
-  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-
-    initMapboxEverything();
-
-    // TODO: Init old markers in a better way.
-    for (MarkerInfo marker : apiService.getLoadedMarkers()) {
-      createAnnotationForMarker(marker);
-    }
   }
 
   private void initMapboxEverything() {

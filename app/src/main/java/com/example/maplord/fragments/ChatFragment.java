@@ -52,33 +52,6 @@ public class ChatFragment extends Fragment {
     // Set the adapter.
     listView.setAdapter(listAdapter);
 
-    apiService.onChatMessageReceived(chatMessage -> {
-      Log.d(TAG, "onChatMessageReceived");
-      addChatMessageToListView(chatMessage);
-    });
-    apiService.onUserJoined(userJoined -> {
-      Log.d(TAG, "onUserJoined");
-      var message = String.format("User %s has joined the chat.", userJoined.userName);
-      addItemToListView(message);
-    });
-    apiService.onUserLeft(userLeft -> {
-      Log.d(TAG, "onUserLeft");
-      var message = String.format("User %s has left the chat.", userLeft.userName);
-      addItemToListView(message);
-    });
-    apiService.onMarkerAdded(newMarker -> {
-      Log.d(TAG, "onMarkerAdded");
-      String message = String.format("Marker created at %f,%f (id: %s) by %s: ",
-        newMarker.lat, newMarker.lon, newMarker.id, newMarker.owner);
-      addItemToListView(message);
-    });
-    apiService.onMarkerDeleted(deletedMarker -> {
-      Log.d(TAG, "onMarkerDeleted");
-      String message = String.format("Marker deleted at %f,%f (id: %s) by %s",
-        deletedMarker.lat, deletedMarker.lon, deletedMarker.id, deletedMarker.owner);
-      addItemToListView(message);
-    });
-
     // Enable the chat input functionality for sending messages.
 
     Button sendButton = binding.sendButton;
@@ -108,11 +81,38 @@ public class ChatFragment extends Fragment {
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    // TODO: Should listeners be here?
 
-    List<ChatMessage> messageHistory = apiService.getLoadedMessages();
-    for (ChatMessage chatMessage : messageHistory) {
+    apiService.onChatMessageReceived((chatMessage, isNew) -> {
+      Log.d(TAG, "onChatMessageReceived");
       addChatMessageToListView(chatMessage);
-    }
+    });
+    apiService.onUserJoined((userJoined, isNew) -> {
+      if (!isNew) {
+        return;
+      }
+      Log.d(TAG, "onUserJoined");
+      var message = String.format("User %s has joined the chat.", userJoined.userName);
+      addItemToListView(message);
+    });
+    apiService.onUserLeft(userLeft -> {
+      Log.d(TAG, "onUserLeft");
+      var message = String.format("User %s has left the chat.", userLeft.userName);
+      addItemToListView(message);
+    });
+    apiService.onMarkerAdded((newMarker, isNew) -> {
+      if (!isNew) {
+        return;
+      }
+      Log.d(TAG, "onMarkerAdded");
+      String message = String.format("New marker created by %s", newMarker.owner);
+      addItemToListView(message);
+    });
+    apiService.onMarkerDeleted(deletedMarker -> {
+      Log.d(TAG, "onMarkerDeleted");
+      String message = String.format("Marker deleted by %s", deletedMarker.owner);
+      addItemToListView(message);
+    });
   }
 
   private void addChatMessageToListView(ChatMessage chatMessage) {

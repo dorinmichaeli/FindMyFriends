@@ -10,8 +10,7 @@ import com.example.maplord.model.ChatMessage;
 import com.example.maplord.model.MarkerAddRequest;
 import com.example.maplord.model.MarkerDeleteRequest;
 import com.example.maplord.model.MarkerInfo;
-import com.example.maplord.model.UserJoined;
-import com.example.maplord.model.UserLeft;
+import com.example.maplord.model.UserInfo;
 import com.example.maplord.model.WelcomeMessage;
 import com.example.maplord.tools.Action;
 import com.google.gson.Gson;
@@ -29,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import okhttp3.OkHttpClient;
@@ -40,15 +40,15 @@ public class ApiService {
   private static final String TAG = "WsApiService";
   private static final int WEBSOCKET_PING_INTERVAL_MS = 5_000;
   private static final int WEBSOCKET_RECONNECT_ATTEMPT_INTERVAL_MS = 3_000;
+  private static final int CHAT_MESSAGES_MAX_BACKLOG = 100;
 
   private final String websocketUrl;
   private final Gson gson;
   private WebSocket socket;
 
-  // TODO: These should probably not be on the API itself.
-  private List<ChatMessage> loadedMessages = null;
-  private List<MarkerInfo> loadedMarkers = null;
-  private List<String> loadedUsers = null;
+  private List<ChatMessage> messages = null;
+  private List<MarkerInfo> markers = null;
+  private List<UserInfo> users = null;
 
   public ApiService(String websocketUrl, String authToken, String groupId) {
     gson = new GsonBuilder()
@@ -104,21 +104,6 @@ public class ApiService {
     socket = client.newWebSocket(request, new WsApiListener());
   }
 
-  public List<ChatMessage> getLoadedMessages() {
-    assert loadedMessages != null;
-    return loadedMessages;
-  }
-
-  public List<MarkerInfo> getLoadedMarkers() {
-    assert loadedMarkers != null;
-    return loadedMarkers;
-  }
-
-  public List<String> getLoadedUsers() {
-    assert loadedUsers != null;
-    return loadedUsers;
-  }
-
   public void sendChatMessage(String messageText) {
     String messageJson = gson.toJson(messageText, String.class);
     socket.send(ClientMessageType.ADD_CHAT_MESSAGE + messageJson);
@@ -139,6 +124,7 @@ public class ApiService {
     socket.send(ClientMessageType.DELETE_MARKER + messageJson);
   }
 
+  // TODO: Should this be called somewhere?
   public void close() {
     socket.close(1000, "User closed the app");
   }
@@ -176,15 +162,20 @@ public class ApiService {
     @Override
     public void onOpen(@NonNull WebSocket webSocket, @NonNull okhttp3.Response response) {
       Log.d(TAG, "Connected to server, now waiting for welcome message...");
-      notifyConnectedToServer();
+//      notifyConnectedToServer();
     }
 
     @Override
     public void onMessage(@NonNull WebSocket webSocket, String text) {
       Log.d(TAG, "onMessage: " + text);
-      char messageType = text.charAt(0);
-      String messageJson = text.substring(1);
-      processMessageFromServer(messageType, messageJson);
+      try {
+        char messageType = text.charAt(0);
+        String messageJson = text.substring(1);
+        processMessageFromServer(messageType, messageJson);
+      } catch (Exception e) {
+        Log.e(TAG, "Error while processing message from server: " + e.getMessage());
+        notifyError(e);
+      }
     }
 
     @Override
@@ -195,7 +186,7 @@ public class ApiService {
     @Override
     public void onFailure(@NonNull WebSocket webSocket, @NonNull Throwable t, okhttp3.Response response) {
       Log.d(TAG, "Socket failure: " + t.getMessage());
-      notifyErrorReportedByServer(t);
+      notifyError(t);
       // Try to reestablish the connection with the API.
       reconnectWebSocket();
     }
@@ -252,12 +243,11 @@ public class ApiService {
   //
 
   private final ArrayList<Action> onConnectedToServer = new ArrayList<>();
-  private final ArrayList<Consumer<WelcomeMessage>> onWelcome = new ArrayList<>();
-  private final ArrayList<Consumer<Throwable>> onErrorReportedByServer = new ArrayList<>();
-  private final ArrayList<Consumer<ChatMessage>> onChatMessageReceived = new ArrayList<>();
-  private final ArrayList<Consumer<UserJoined>> onUserJoined = new ArrayList<>();
-  private final ArrayList<Consumer<UserLeft>> onUserLeft = new ArrayList<>();
-  private final ArrayList<Consumer<MarkerInfo>> onMarkerAdded = new ArrayList<>();
+  private final ArrayList<Consumer<Throwable>> onError = new ArrayList<>();
+  private final ArrayList<BiConsumer<ChatMessage, Boolean>> onChatMessageReceived = new ArrayList<>();
+  private final ArrayList<BiConsumer<UserInfo, Boolean>> onUserJoined = new ArrayList<>();
+  private final ArrayList<Consumer<UserInfo>> onUserLeft = new ArrayList<>();
+  private final ArrayList<BiConsumer<MarkerInfo, Boolean>> onMarkerAdded = new ArrayList<>();
   private final ArrayList<Consumer<MarkerInfo>> onMarkerDeleted = new ArrayList<>();
 
   //
@@ -269,17 +259,17 @@ public class ApiService {
     WelcomeMessage welcomeMessage = gson.fromJson(messageJson, WelcomeMessage.class);
 
     // TODO: Do the next 2 lines outside!
-    loadedMessages = Arrays.asList(welcomeMessage.chatHistory);
-    loadedMarkers = Arrays.asList(welcomeMessage.markerList);
-    loadedUsers = Arrays.asList(welcomeMessage.usersInGroup);
+    messages = welcomeMessage.chatHistory;
+    markers = welcomeMessage.markerList;
+    users = welcomeMessage.usersInGroup;
 
-    notifyWelcomeMessage(welcomeMessage);
+    notifyConnectedToServer();
   }
 
   private void handleErrorReportedByServer(String messageJson) {
     Log.d(TAG, "Error reported by server: " + messageJson);
     String data = gson.fromJson(messageJson, String.class);
-    notifyErrorReportedByServer(new Exception(data));
+    notifyError(new Exception(data));
   }
 
   private void handleChatMessageReceived(String messageJson) {
@@ -290,13 +280,13 @@ public class ApiService {
 
   private void handleUserJoined(String messageJson) {
     Log.d(TAG, "User joined: " + messageJson);
-    UserJoined data = gson.fromJson(messageJson, UserJoined.class);
+    UserInfo data = gson.fromJson(messageJson, UserInfo.class);
     notifyUserJoined(data);
   }
 
   private void handleUserLeft(String messageJson) {
     Log.d(TAG, "User left: " + messageJson);
-    UserLeft data = gson.fromJson(messageJson, UserLeft.class);
+    UserInfo data = gson.fromJson(messageJson, UserInfo.class);
     notifyUserLeft(data);
   }
 
@@ -322,43 +312,50 @@ public class ApiService {
     }
   }
 
-  private void notifyWelcomeMessage(WelcomeMessage welcomeMessage) {
-    for (var listener : onWelcome) {
-      listener.accept(welcomeMessage);
-    }
-  }
-
-  private void notifyErrorReportedByServer(Throwable error) {
-    for (var listener : onErrorReportedByServer) {
-      listener.accept(error);
+  private void notifyError(Throwable error) {
+    for (var listener : onError) {
+      try {
+        listener.accept(error);
+      } catch (Exception e) {
+        Log.e(TAG, "Error in error listener: " + e.getMessage());
+      }
     }
   }
 
   private void notifyChatMessageReceived(ChatMessage message) {
+    messages.add(message);
+    if (messages.size() > CHAT_MESSAGES_MAX_BACKLOG) {
+      messages.remove(0);
+    }
+
     for (var listener : onChatMessageReceived) {
-      listener.accept(message);
+      listener.accept(message, true);
     }
   }
 
-  private void notifyUserJoined(UserJoined userJoined) {
+  private void notifyUserJoined(UserInfo userJoined) {
+    users.add(userJoined);
     for (var listener : onUserJoined) {
-      listener.accept(userJoined);
+      listener.accept(userJoined, true);
     }
   }
 
-  private void notifyUserLeft(UserLeft userLeft) {
+  private void notifyUserLeft(UserInfo userLeft) {
+    users.removeIf(user -> user.userName.equals(userLeft.userName));
     for (var listener : onUserLeft) {
       listener.accept(userLeft);
     }
   }
 
   private void notifyMarkerAdded(MarkerInfo newMarker) {
+    markers.add(newMarker);
     for (var listener : onMarkerAdded) {
-      listener.accept(newMarker);
+      listener.accept(newMarker, true);
     }
   }
 
   private void notifyMarkerDeleted(MarkerInfo deletedMarker) {
+    markers.removeIf(marker -> marker.id.equals(deletedMarker.id));
     for (var listener : onMarkerDeleted) {
       listener.accept(deletedMarker);
     }
@@ -372,27 +369,32 @@ public class ApiService {
     onConnectedToServer.add(listener);
   }
 
-  public void onWelcomeMessage(Consumer<WelcomeMessage> listener) {
-    onWelcome.add(listener);
-  }
-
   public void onError(Consumer<Throwable> listener) {
-    onErrorReportedByServer.add(listener);
+    onError.add(listener);
   }
 
-  public void onChatMessageReceived(Consumer<ChatMessage> listener) {
+  public void onChatMessageReceived(BiConsumer<ChatMessage, Boolean> listener) {
+    for (var message : messages) {
+      listener.accept(message, false);
+    }
     onChatMessageReceived.add(listener);
   }
 
-  public void onUserJoined(Consumer<UserJoined> listener) {
+  public void onUserJoined(BiConsumer<UserInfo, Boolean> listener) {
+    for (var user : users) {
+      listener.accept(user, false);
+    }
     onUserJoined.add(listener);
   }
 
-  public void onUserLeft(Consumer<UserLeft> listener) {
+  public void onUserLeft(Consumer<UserInfo> listener) {
     onUserLeft.add(listener);
   }
 
-  public void onMarkerAdded(Consumer<MarkerInfo> listener) {
+  public void onMarkerAdded(BiConsumer<MarkerInfo, Boolean> listener) {
+    for (var marker : markers) {
+      listener.accept(marker, false);
+    }
     onMarkerAdded.add(listener);
   }
 
