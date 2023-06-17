@@ -17,8 +17,6 @@ import com.example.maplord.services.UserService;
 public class PrepareActivity extends AppCompatActivity {
   private boolean locationUpdated = false;
   private boolean welcomeMessageReceived = false;
-  // TODO: Load marker list here, probably.
-  //private boolean markerListLoaded = false;
 
   // Dependencies.
   private DialogService dialogService;
