@@ -22,6 +22,10 @@
 - (DONE) Marker ownership. A user should be able to see the name/id of the user that
   created a specific marker. For example each marker should have a name above it, or a unique
   per-user color.
+- (DONE) Ask the user for permission to use their location in the PermissionsActivity, rather than
+  force the user to add the permission manually in the settings.
+- (DONE) Fix every tab in MainActivity missing events, until that tab is visited for the first time
+  by the user.
 
 ## Secondary tasks
 
