@@ -4,21 +4,48 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <EditText
-        android:id="@+id/editTextGroupId"
+
+    <ImageView
+        android:id="@+id/app_logo"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        android:contentDescription="Google Logo"
+        android:padding="24dp"
+        android:src="@drawable/fmf_logo" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editTextGroupIdParent"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:hint="Group id"
-        android:inputType="text"
-        android:textAlignment="center"
-        android:textSize="24sp" />
+        android:layout_below="@+id/app_logo"
+        android:hint="Enter a group id to join">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextGroupId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!--    <EditText-->
+    <!--        android:id="@+id/editTextGroupId"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_below="@+id/app_logo"-->
+    <!--        android:layout_marginTop="30dp"-->
+    <!--        android:hint="Select a group to join"-->
+    <!--        android:inputType="text"-->
+    <!--        android:textAlignment="center"-->
+    <!--        android:textSize="24sp" />-->
 
     <Button
         android:id="@+id/buttonSendGroupId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editTextGroupId"
+        android:layout_below="@id/editTextGroupIdParent"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:paddingHorizontal="36dp"

@@ -22,7 +22,7 @@
         <activity
             android:name=".activities.PermissionsActivity"
             android:exported="true"
-            android:label="@string/title_activity_permissions">
+            android:theme="@style/Theme.MapLord.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -31,14 +31,17 @@
 
         <activity
             android:name=".activities.LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login"
+            android:theme="@style/Theme.MapLord.NoActionBar" />
         <activity
             android:name=".activities.GroupSelectActivity"
-            android:label="@string/title_activity_group_select" />
+            android:label="@string/title_activity_group_select"
+            android:theme="@style/Theme.MapLord.NoActionBar" />
 
         <activity
             android:name=".activities.PrepareActivity"
-            android:label="@string/title_activity_prepare" />
+            android:label="@string/title_activity_prepare"
+            android:theme="@style/Theme.MapLord.NoActionBar" />
 
         <activity
             android:name=".activities.MainActivity"
