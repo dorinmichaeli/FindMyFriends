@@ -14,6 +14,8 @@ public class UserService {
     return this.user != null;
   }
 
+  // TODO: This should probably be in the constructor, and the UserService
+  //  should not be created until the user is logged in.
   public void setUser(FirebaseUser user) {
     assert !this.isLoggedIn();
     this.user = user;
