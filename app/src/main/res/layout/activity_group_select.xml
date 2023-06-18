@@ -30,17 +30,6 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!--    <EditText-->
-    <!--        android:id="@+id/editTextGroupId"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_below="@+id/app_logo"-->
-    <!--        android:layout_marginTop="30dp"-->
-    <!--        android:hint="Select a group to join"-->
-    <!--        android:inputType="text"-->
-    <!--        android:textAlignment="center"-->
-    <!--        android:textSize="24sp" />-->
-
     <Button
         android:id="@+id/buttonSendGroupId"
         android:layout_width="wrap_content"
