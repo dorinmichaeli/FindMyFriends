@@ -30,7 +30,7 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonSendGroupId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,8 +38,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:paddingHorizontal="36dp"
-        android:paddingVertical="7dp"
+        android:paddingVertical="10dp"
         android:text="Join group"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        style="@style/Widget.MaterialComponents.Button"  />
 
 </RelativeLayout>

@@ -1,8 +1,13 @@
 package com.example.maplord.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
@@ -50,6 +55,9 @@ public class PrepareActivity extends AppCompatActivity {
         checkIfEverythingFinished();
       });
     });
+
+    ProgressBar pb = findViewById(R.id.progress_bar);
+    pb.animate();
 
     startLoadingLastKnownLocation();
   }
