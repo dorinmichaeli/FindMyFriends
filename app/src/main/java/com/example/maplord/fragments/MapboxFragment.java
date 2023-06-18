@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
@@ -170,8 +171,14 @@ public class MapboxFragment extends Fragment {
   }
 
   private void createAnnotationForMarker(MarkerInfo marker) {
+    @DrawableRes int markerImage;
+    if (userService.getUserEmail().equals(marker.owner)) {
+      markerImage = R.drawable.red_marker;
+    } else {
+      markerImage = R.drawable.yellow_marker;
+    }
     // Get the marker image.
-    Drawable markerSource = AppCompatResources.getDrawable(requireContext(), R.drawable.red_marker);
+    Drawable markerSource = AppCompatResources.getDrawable(requireContext(), markerImage);
     assert markerSource != null;
     assert markerSource instanceof BitmapDrawable;
 
