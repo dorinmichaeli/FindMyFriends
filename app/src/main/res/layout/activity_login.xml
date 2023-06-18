@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
         android:id="@+id/app_logo"
@@ -12,26 +13,24 @@
         android:padding="24dp"
         android:src="@drawable/fmf_logo" />
 
-    <ImageView
-        android:id="@+id/login_logo"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/login_button"
+        android:layout_width="260dp"
+        android:layout_height="72dp"
         android:layout_below="@id/app_logo"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="32dp"
-        android:contentDescription="Google Logo"
-        android:src="@drawable/google_logo" />
-
-    <Button
-        android:id="@+id/login_button"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="240dp"
-        android:layout_height="72dp"
-        android:layout_below="@id/login_logo"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="50dp"
+        android:padding="0dp"
+        android:paddingStart="8dp"
         android:text="Login with Google"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        app:icon="@drawable/google_logo"
+        app:iconTint="@null"
+        app:iconSize="40dp"
+        app:iconPadding="0dp"
+        app:iconGravity="start"
+        style="@style/Widget.MaterialComponents.Button" />
 
     <TextView
         android:id="@+id/explanation_text"
@@ -39,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/login_button"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="4dp"
         android:text="Please login to continue"
         android:textAlignment="center"
         android:textSize="14sp" />
