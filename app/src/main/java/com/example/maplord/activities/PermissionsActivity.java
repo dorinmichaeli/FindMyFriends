@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 
 import com.example.maplord.MapLordApp;
 import com.example.maplord.R;
@@ -27,7 +28,14 @@ public class PermissionsActivity extends AppCompatActivity {
         return;
       }
 
-      continueToLoginActivity();
+      // TODO: This should probably not be done here.
+      LiveData<Boolean> locationUpdated = locationService.updateLastKnownLocation();
+      locationUpdated.observe(this, updated -> {
+        if (!updated) {
+          return;
+        }
+        continueToLoginActivity();
+      });
     });
   }
 

@@ -1,31 +1,23 @@
 package com.example.maplord.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ProgressBar;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
 
 import com.example.maplord.MapLordApp;
 import com.example.maplord.R;
 import com.example.maplord.services.ApiService;
 import com.example.maplord.services.DialogService;
-import com.example.maplord.services.LocationService;
 import com.example.maplord.services.UserService;
 
 public class PrepareActivity extends AppCompatActivity {
-  private boolean locationUpdated = false;
   private boolean welcomeMessageReceived = false;
 
   // Dependencies.
   private DialogService dialogService;
-  private LocationService locationService;
   private UserService userService;
 
   @Override
@@ -36,7 +28,6 @@ public class PrepareActivity extends AppCompatActivity {
     String groupId = getIntent().getStringExtra("groupId");
 
     dialogService = MapLordApp.get(this).getDialogService();
-    locationService = MapLordApp.get(this).getLocationService();
     userService = MapLordApp.get(this).getUserService();
 
     // TODO: This should be done in a better way.
@@ -58,23 +49,10 @@ public class PrepareActivity extends AppCompatActivity {
 
     ProgressBar pb = findViewById(R.id.progress_bar);
     pb.animate();
-
-    startLoadingLastKnownLocation();
-  }
-
-  private void startLoadingLastKnownLocation() {
-    LiveData<Boolean> locationUpdated = locationService.updateLastKnownLocation();
-    locationUpdated.observe(this, updated -> {
-      if (!updated) {
-        return;
-      }
-      this.locationUpdated = true;
-      checkIfEverythingFinished();
-    });
   }
 
   private void checkIfEverythingFinished() {
-    if (locationUpdated && welcomeMessageReceived) {
+    if (welcomeMessageReceived) {
       var intent = new Intent(this, MainActivity.class);
       startActivity(intent);
     }

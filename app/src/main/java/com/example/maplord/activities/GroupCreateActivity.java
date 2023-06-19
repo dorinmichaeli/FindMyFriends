@@ -38,9 +38,10 @@ public class GroupCreateActivity extends AppCompatActivity {
 
       restApiService.createNewGroup(groupId, (newGroup, err) -> {
         if (err != null) {
-          dialogService.alert("Something went wrong", "Please try again.", null);
+          dialogService.alert("Failed to create group", "Something went wrong, please try again.", null);
           return;
         }
+
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("groupId", newGroup.groupId);
         clipboard.setPrimaryClip(clip);
@@ -48,17 +49,15 @@ public class GroupCreateActivity extends AppCompatActivity {
         String message = String.format(
           "Group \"%s\" created successfully. Your group id is: %s. It has been copied to your clipboard!",
           newGroup.groupName, newGroup.groupId);
-        dialogService.alert("Group created", message, () -> {
-          finishCreatingGroup(newGroup.groupId);
+        dialogService.alert("Group created successfully!", message, () -> {
+          finishCreatingGroup();
         });
       });
     });
   }
 
-  private void finishCreatingGroup(String groupId) {
-    // Start the next activity, and pass the group id to it.
+  private void finishCreatingGroup() {
     var intent = new Intent(GroupCreateActivity.this, TitleMenuActivity.class);
-    intent.putExtra("groupId", groupId);
     startActivity(intent);
   }
 }

@@ -1,7 +1,10 @@
 package com.example.maplord.services;
 
+import com.example.maplord.api.EventCreateRequest;
+import com.example.maplord.api.EventCreateResponse;
 import com.example.maplord.api.GroupCreateRequest;
 import com.example.maplord.api.GroupCreateResponse;
+import com.example.maplord.api.MarkerLocation;
 import com.example.maplord.api.RestApi;
 import com.example.maplord.tools.Helpers;
 import com.google.gson.Gson;
@@ -69,6 +72,21 @@ public class RestApiService {
     var request = new GroupCreateRequest();
     request.groupName = groupName;
     var call = api.createGroup(request);
+    Helpers.resolveCall(call, (result, err) -> {
+      if (err != null) {
+        onResult.accept(null, err);
+        return;
+      }
+      onResult.accept(result, null);
+    });
+  }
+
+  public void createNewEvent(String eventName, MarkerLocation[] markerLocations, BiConsumer<EventCreateResponse, Throwable> onResult) {
+    var request = new EventCreateRequest();
+    request.eventName = eventName;
+    request.markerLocations = markerLocations;
+
+    var call = api.createEvent(request);
     Helpers.resolveCall(call, (result, err) -> {
       if (err != null) {
         onResult.accept(null, err);

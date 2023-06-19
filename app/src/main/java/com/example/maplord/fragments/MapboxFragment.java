@@ -93,7 +93,7 @@ public class MapboxFragment extends Fragment {
     Location location = locationService.getLastKnownLocation();
     Point newCameraLocation = Point.fromLngLat(location.getLongitude(), location.getLatitude());
     MapboxMap map = mapDisplay.getMapboxMap();
-    double cameraZoom = ResourceTools.getDouble(this, R.string.mapbox_default_camera_zoom);
+    double cameraZoom = ResourceTools.getDouble(requireContext(), R.string.mapbox_default_camera_zoom);
     moveCameraTo(map, newCameraLocation, cameraZoom);
   }
 

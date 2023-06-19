@@ -12,4 +12,7 @@ public interface RestApi {
 
   @POST("/group/create")
   Call<GroupCreateResponse> createGroup(@Body GroupCreateRequest request);
+
+  @POST("/event/create")
+  Call<EventCreateResponse> createEvent(@Body EventCreateRequest request);
 }
