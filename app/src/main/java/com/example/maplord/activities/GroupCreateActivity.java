@@ -29,14 +29,16 @@ public class GroupCreateActivity extends AppCompatActivity {
     dialogService = MapLordApp.get(this).getDialogService();
     restApiService = MapLordApp.get(this).getRestApiService();
 
-    EditText editTextGroupId = findViewById(R.id.edit_text_group_name);
+    EditText editTextGroupName = findViewById(R.id.edit_text_group_name);
+    EditText editTextEventId = findViewById(R.id.edit_text_event_id);
     Button buttonSendGroupId = findViewById(R.id.button_finish_creating_group);
 
     buttonSendGroupId.setOnClickListener(view -> {
       // Take the group id from the input field.
-      String groupId = editTextGroupId.getText().toString();
+      String groupName = editTextGroupName.getText().toString();
+      String eventId = editTextEventId.getText().toString();
 
-      restApiService.createNewGroup(groupId, (newGroup, err) -> {
+      restApiService.createNewGroup(groupName, eventId, (newGroup, err) -> {
         if (err != null) {
           dialogService.alert("Failed to create group", "Something went wrong, please try again.", null);
           return;

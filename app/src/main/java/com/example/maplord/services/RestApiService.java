@@ -68,9 +68,10 @@ public class RestApiService {
     });
   }
 
-  public void createNewGroup(String groupName, BiConsumer<GroupCreateResponse, Throwable> onResult) {
+  public void createNewGroup(String groupName, String eventId, BiConsumer<GroupCreateResponse, Throwable> onResult) {
     var request = new GroupCreateRequest();
     request.groupName = groupName;
+    request.eventId = eventId;
     var call = api.createGroup(request);
     Helpers.resolveCall(call, (result, err) -> {
       if (err != null) {
