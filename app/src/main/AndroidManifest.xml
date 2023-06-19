@@ -32,16 +32,18 @@
 
         <activity
             android:name=".activities.LoginActivity"
-            android:label="@string/title_activity_login"
             android:theme="@style/Theme.MapLord.NoActionBar" />
+
+        <activity
+            android:name=".activities.TitleMenuActivity"
+            android:theme="@style/Theme.MapLord.NoActionBar" />
+
         <activity
             android:name=".activities.GroupSelectActivity"
-            android:label="@string/title_activity_group_select"
             android:theme="@style/Theme.MapLord.NoActionBar" />
 
         <activity
             android:name=".activities.PrepareActivity"
-            android:label="@string/title_activity_prepare"
             android:theme="@style/Theme.MapLord.NoActionBar" />
 
         <activity

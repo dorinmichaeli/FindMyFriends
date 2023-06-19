@@ -118,7 +118,7 @@ public final class LoginActivity extends AppCompatActivity {
   }
 
   private void finishLogin() {
-    var intent = new Intent(this, GroupSelectActivity.class);
+    var intent = new Intent(this, TitleMenuActivity.class);
     startActivity(intent);
   }
 }
