@@ -16,6 +16,7 @@ import com.example.maplord.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -39,7 +40,7 @@ public class LocationService {
     }
 
     fusedLocationClient
-      .getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null)
+      .getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
       .addOnSuccessListener(app.getCurrentActivity(), location -> {
         assert location != null;
         lastKnownLocation = location;
