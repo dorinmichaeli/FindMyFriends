@@ -43,6 +43,10 @@
             android:theme="@style/Theme.MapLord.NoActionBar" />
 
         <activity
+            android:name=".activities.GroupCreateActivity"
+            android:theme="@style/Theme.MapLord.NoActionBar" />
+
+        <activity
             android:name=".activities.PrepareActivity"
             android:theme="@style/Theme.MapLord.NoActionBar" />
 

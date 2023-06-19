@@ -1,5 +1,7 @@
 package com.example.maplord.services;
 
+import com.example.maplord.api.GroupCreateRequest;
+import com.example.maplord.api.GroupCreateResponse;
 import com.example.maplord.api.RestApi;
 import com.example.maplord.tools.Helpers;
 import com.google.gson.Gson;
@@ -60,6 +62,19 @@ public class RestApiService {
       }
 
       onResult.accept(result.exists, null);
+    });
+  }
+
+  public void createNewGroup(String groupName, BiConsumer<GroupCreateResponse, Throwable> onResult) {
+    var request = new GroupCreateRequest();
+    request.groupName = groupName;
+    var call = api.createGroup(request);
+    Helpers.resolveCall(call, (result, err) -> {
+      if (err != null) {
+        onResult.accept(null, err);
+        return;
+      }
+      onResult.accept(result, null);
     });
   }
 }

@@ -13,9 +13,6 @@ import com.example.maplord.services.DialogService;
 import com.example.maplord.services.RestApiService;
 
 public class GroupSelectActivity extends AppCompatActivity {
-  private EditText editTextGroupId;
-  private Button buttonSendGroupId;
-
   // Dependencies.
   private DialogService dialogService;
   private RestApiService restApiService;
@@ -28,8 +25,8 @@ public class GroupSelectActivity extends AppCompatActivity {
     dialogService = MapLordApp.get(this).getDialogService();
     restApiService = MapLordApp.get(this).getRestApiService();
 
-    editTextGroupId = findViewById(R.id.editTextGroupId);
-    buttonSendGroupId = findViewById(R.id.buttonSendGroupId);
+    EditText editTextGroupId = findViewById(R.id.editTextGroupId);
+    Button buttonSendGroupId = findViewById(R.id.buttonSendGroupId);
 
     buttonSendGroupId.setOnClickListener(view -> {
       // Take the group id from the input field.
