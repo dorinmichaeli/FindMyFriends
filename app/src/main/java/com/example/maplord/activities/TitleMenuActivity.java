@@ -18,14 +18,13 @@ public class TitleMenuActivity extends AppCompatActivity {
       startGroupSelectActivity();
     });
 
-    findViewById(R.id.button_finish_creating_group).setOnClickListener(v -> {
+    findViewById(R.id.button_create_group).setOnClickListener(v -> {
       startGroupCreateActivity();
     });
 
     findViewById(R.id.button_create_event).setOnClickListener(v -> {
       startEventCreateActivity();
     });
-
   }
 
   private void startGroupSelectActivity() {
@@ -39,6 +38,7 @@ public class TitleMenuActivity extends AppCompatActivity {
   }
 
   private void startEventCreateActivity() {
-    // TODO: Implement this.
+    var intent = new Intent(this, EventCreateActivity.class);
+    startActivity(intent);
   }
 }

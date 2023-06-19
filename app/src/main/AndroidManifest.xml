@@ -47,6 +47,11 @@
             android:theme="@style/Theme.MapLord.NoActionBar" />
 
         <activity
+            android:name=".activities.EventCreateActivity"
+            android:theme="@style/Theme.MapLord.NoActionBar" >
+        </activity>
+
+        <activity
             android:name=".activities.PrepareActivity"
             android:theme="@style/Theme.MapLord.NoActionBar" />
 
