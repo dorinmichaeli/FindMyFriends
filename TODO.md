@@ -7,10 +7,8 @@
 - Add group template for social events. A group template should contain predetermined markers set by
   the creator of the template. When creating a group from a template, the markers should be added
   to the group. These markers will have a different color, and no user will be able to remove them.
-- Make a user's own markers a different color.
-- When trying to log in via Google and the user is not logged in in the device, let the user know
-  what happened instead of showing an obscure error.
 
+- (DONE) Make a user's own markers a different color.
 - (DONE) Add live communication between server and client to let the server know when a new marker
   has been
   added by another user in their group so that the user can immediately add the marker locally.
@@ -29,10 +27,10 @@
 
 ## Secondary tasks
 
-- Find out how to change the app's name and icon in the apps view in the device.
+- (DONE) Find out how to change the app's name and icon in the apps view in the device.
 - Think about how we can emulate/simulate multiple devices for field testing. Do we need to get
   multiple old Android devices or something?
--
+
 - (N/A) Fix back navigation from MapboxFragment not working.
 - (Done) Make HTTPS with self-signed certificates work during development.
 - (Done) Implement login via google.
@@ -45,6 +43,11 @@
 - (DONE) See list of users in your group.
 - (DONE) Chat room with other users in your group.
 - See live locations of all users in your group.
+
+## Low priority
+
+- When trying to log in via Google and the user is not logged in in the device, let the user know
+  what happened instead of showing an obscure error.
 
 ## Research
 

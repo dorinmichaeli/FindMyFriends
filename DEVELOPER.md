@@ -89,4 +89,6 @@ In the newer API (v10) the plugins are now part of the core API.
 
 ### com.google.android.gms.common.api.UnsupportedApiCallException: Missing Feature{name=auth_api_credentials_begin_sign_in, version=8}
 
-Removing the SHA1 fingerprint from the Firebase console and adding it again fixed the issue. 
+- Removing the SHA1 fingerprint from the Firebase console and adding it again may fix the issue.
+- Using a different emulated device altogether may also fix the issue. Wiping the data of an existing one that shows this buy DOESN'T FIX THE ISSUE.
+- Clean, Rebuild, wipe Gradle global cache, sync gradle files - none of these seem to help much.
