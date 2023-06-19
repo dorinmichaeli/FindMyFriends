@@ -5,6 +5,7 @@
     <string name="title_activity_group_select">Join friends group</string>
     <string name="title_activity_prepare">Getting everything ready…</string>
     <string name="maplord_api_url">http://10.0.2.2:8080</string>
+    <string name="maplord_rest_api_url">http://10.0.2.2:4000</string>
 
     <string name="next_fragment">Next</string>
 

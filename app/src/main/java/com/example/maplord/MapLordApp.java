@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.example.maplord.services.ApiService;
 import com.example.maplord.services.DialogService;
 import com.example.maplord.services.LocationService;
+import com.example.maplord.services.RestApiService;
 import com.example.maplord.services.UserService;
 
 public class MapLordApp extends Application {
@@ -22,6 +23,7 @@ public class MapLordApp extends Application {
   // Services
   private DialogService dialogService;
   private ApiService apiService;
+  private RestApiService restApiService;
   private LocationService locationService;
   private UserService userService;
 
@@ -36,6 +38,8 @@ public class MapLordApp extends Application {
     userService = new UserService();
 
     locationService = new LocationService(this);
+
+    restApiService = new RestApiService(getString(R.string.maplord_rest_api_url), userService);
   }
 
   public void initApiService(String authToken, String groupId) {
@@ -70,6 +74,11 @@ public class MapLordApp extends Application {
   public ApiService getApiService() {
     assert apiService != null;
     return apiService;
+  }
+
+  public RestApiService getRestApiService() {
+    assert restApiService != null;
+    return restApiService;
   }
 
   public LocationService getLocationService() {
