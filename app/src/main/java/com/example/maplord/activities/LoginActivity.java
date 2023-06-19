@@ -44,13 +44,20 @@ public final class LoginActivity extends AppCompatActivity {
     dialogService = MapLordApp.get(this).getDialogService();
     userService = MapLordApp.get(this).getUserService();
 
-    // Get the Firebase Auth provider.
-    firebaseAuth = FirebaseAuth.getInstance();
+    FirebaseAuth.getInstance().addAuthStateListener(auth -> {
+      firebaseAuth = auth;
 
-    // We'll use this client to prompt the user to log in with their google account.
-    loginClient = Identity.getSignInClient(this);
+      // We'll use this client to prompt the user to log in with their google account.
+      loginClient = Identity.getSignInClient(this);
 
-    // Register a listener for when the user successfully logs in.
+      FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+      if (currentUser == null) {
+        return;
+      }
+      userService.setUser(currentUser);
+      finishLogin();
+    });
+
     resultLauncher = registerForActivityResult(
       new ActivityResultContracts.StartIntentSenderForResult(),
       result -> tryLogin(result.getData())
@@ -64,10 +71,6 @@ public final class LoginActivity extends AppCompatActivity {
   }
 
   private void beginSignInRequest() {
-    var passwordOptions = BeginSignInRequest.PasswordRequestOptions.builder()
-      .setSupported(true)
-      .build();
-
     var tokenOptions = BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
       .setSupported(true)
       // Your server's client ID, not your Android client ID.
@@ -77,11 +80,9 @@ public final class LoginActivity extends AppCompatActivity {
       .build();
 
     var signInRequest = BeginSignInRequest.builder()
-      .setPasswordRequestOptions(passwordOptions)
       .setGoogleIdTokenRequestOptions(tokenOptions)
       .setAutoSelectEnabled(false)
       .build();
-
 
     loginClient.beginSignIn(signInRequest)
       .addOnSuccessListener(this, result -> {
@@ -111,15 +112,8 @@ public final class LoginActivity extends AppCompatActivity {
 
     AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
     firebaseAuth.signInWithCredential(firebaseCredential)
-      .addOnCompleteListener(this, task -> {
-        if (task.isSuccessful()) {
-          FirebaseUser user = firebaseAuth.getCurrentUser();
-          userService.setUser(user);
-          finishLogin();
-        } else {
-          var err = task.getException();
-          dialogService.fatalError("Could not sign in with credentials: " + err);
-        }
+      .addOnFailureListener(this, err -> {
+        dialogService.fatalError("Could not sign in with credentials: " + err);
       });
   }
 
