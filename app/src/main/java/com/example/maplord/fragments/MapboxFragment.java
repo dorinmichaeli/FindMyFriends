@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,7 @@ import com.example.maplord.R;
 import com.example.maplord.components.MapDisplay;
 import com.example.maplord.model.MarkerInfo;
 import com.example.maplord.services.ApiService;
+import com.example.maplord.services.DialogService;
 import com.example.maplord.services.LocationService;
 import com.example.maplord.databinding.FragmentMapboxBinding;
 import com.example.maplord.services.UserService;
@@ -30,12 +32,14 @@ public class MapboxFragment extends Fragment {
   private MapDisplay mapDisplay;
 
   // Dependencies.
+  private DialogService dialogService;
   private ApiService apiService;
   private UserService userService;
   private LocationService locationService;
 
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    dialogService = MapLordApp.get(this).getDialogService();
     apiService = MapLordApp.get(this).getApiService();
     userService = MapLordApp.get(this).getUserService();
     locationService = MapLordApp.get(this).getLocationService();
@@ -100,17 +104,21 @@ public class MapboxFragment extends Fragment {
   private void initCreateMarkerOnMapClick() {
     // Add a marker on the map wherever a user clicks.
     mapDisplay.eventMapClicked.addListener(point -> {
-      // Create a marker in the API.
-      apiService.addMarker(point.latitude(), point.longitude());
+      dialogService.textInputPopup("Enter a title for your marker.", title -> {
+        // Create a marker in the API.
+        apiService.addMarker(title, point.latitude(), point.longitude());
+      });
     });
   }
 
   private void placeMarkerOnMap(MarkerInfo markerInfo) {
     @DrawableRes int markerImage;
-    if (userService.getUserEmail().equals(markerInfo.owner)) {
-      markerImage = R.drawable.red_marker;
+    if (markerInfo.owner.equalsIgnoreCase("admin")) {
+      markerImage = R.drawable.marker_yellow;
+    } else if (userService.getUserEmail().equals(markerInfo.owner)) {
+      markerImage = R.drawable.marker_green;
     } else {
-      markerImage = R.drawable.yellow_marker;
+      markerImage = R.drawable.marker_red;
     }
     mapDisplay.createAnnotationForMarker(markerInfo, markerImage);
   }

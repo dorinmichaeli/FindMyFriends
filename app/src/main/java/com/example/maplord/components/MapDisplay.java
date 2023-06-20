@@ -96,10 +96,9 @@ public class MapDisplay extends MapView {
     PointAnnotation annotation = pointAnnotationManager.create(pointAnnotationOptions);
 
     // Create a view annotation for the text
-    // label that shows the marker's owner.
-    String markerOwner = sanitizeOwnerName(marker.owner);
+
     // Add an annotation for the marker owner.
-    View view = addViewAnnotation(point, markerOwner);
+    View view = addViewAnnotation(point, marker.title);
 
     // Add the marker to our hashmaps.
     var info = new AnnotationInfo(annotation, marker, view);
@@ -158,7 +157,6 @@ public class MapDisplay extends MapView {
     });
   }
 
-
   private View addViewAnnotation(Point point, String text) {
     // TODO: The following lines throw an error if lat/lon are not in range. Consider handling that error somehow?
 
@@ -184,19 +182,5 @@ public class MapDisplay extends MapView {
       this.markerInfo = markerInfo;
       this.viewAnnotation = viewAnnotation;
     }
-  }
-
-  @NonNull
-  private static String sanitizeOwnerName(@Nullable String ownerName) {
-    if (ownerName == null || ownerName.isEmpty()) {
-      return "unknown";
-    }
-    // Remove the ignored suffix from the marker owner name.
-    // Example: "john.doe@gmail.com" -> "john.doe"
-    final String ignoredSuffix = "@gmail.com";
-    if (ownerName.endsWith(ignoredSuffix)) {
-      ownerName = ownerName.substring(0, ownerName.length() - ignoredSuffix.length());
-    }
-    return ownerName;
   }
 }

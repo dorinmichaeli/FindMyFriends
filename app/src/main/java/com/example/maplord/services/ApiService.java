@@ -109,8 +109,9 @@ public class ApiService {
     socket.send(ClientMessageType.ADD_CHAT_MESSAGE + messageJson);
   }
 
-  public void addMarker(double lat, double lon) {
+  public void addMarker(String title, double lat, double lon) {
     var addRequest = new MarkerAddRequest();
+    addRequest.title = title;
     addRequest.lat = lat;
     addRequest.lon = lon;
     String messageJson = gson.toJson(addRequest, MarkerAddRequest.class);

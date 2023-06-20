@@ -7,12 +7,13 @@
 
     <TextView
         android:id="@+id/annotation_text_label"
-        android:text="hello world"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="13sp"
+        android:textColor="@color/white"
         android:padding="3dp"
+        android:textAlignment="center"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

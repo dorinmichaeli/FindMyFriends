@@ -1,6 +1,7 @@
 package com.example.maplord.services;
 
 import android.view.View;
+import android.widget.EditText;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -60,5 +61,23 @@ public class DialogService {
       snackbar.dismiss();
     });
     snackbar.show();
+  }
+
+  public void textInputPopup(String title, Consumer<String> result) {
+    var activity = app.getCurrentActivity();
+
+    var input = new EditText(activity);
+    input.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+    var dialog = new AlertDialog.Builder(activity)
+      .setTitle(title)
+      .setView(input)
+      .setPositiveButton("OK", (d, whichButton) -> {
+        String value = input.getText().toString();
+        result.accept(value);
+      })
+      .create();
+
+    dialog.show();
   }
 }
