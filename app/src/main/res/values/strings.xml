@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">Find My Friends</string>
-<!--    <string name="maplord_api_url">http://10.0.2.2:8080</string>-->
-<!--    <string name="maplord_rest_api_url">http://10.0.2.2:4000</string>-->
-    <string name="maplord_api_url">https://api.mypartymap.com:8080</string>
-    <string name="maplord_rest_api_url">https://api.mypartymap.com:4000</string>
+<!--    <string name="findmyfriends_api_url">http://10.0.2.2:8080</string>-->
+<!--    <string name="findmyfriends_rest_api_url">http://10.0.2.2:4000</string>-->
+    <string name="findmyfriends_api_url">https://api.mypartymap.com:8080</string>
+    <string name="findmyfriends_rest_api_url">https://api.mypartymap.com:4000</string>
 
     <string name="next_fragment">Next</string>
 

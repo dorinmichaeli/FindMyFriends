@@ -7,6 +7,43 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:73081067599:android:c2fa6cc51e81f0991af23a",
+        "android_client_info": {
+          "package_name": "com.example.findmyfriends"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "73081067599-fu2ac7e5rs6o920f8l8uurqmd3kksero.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.findmyfriends",
+            "certificate_hash": "a1c725f4f84a27f6a8272d1d755e5e40991a5522"
+          }
+        },
+        {
+          "client_id": "73081067599-o9l0v1htd3ieie4mu0taki47o4fgr5uf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATks3T0fl3VsDrkv_RMz49An-GOwSAFoE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "73081067599-k0l0jtfhudbp8ddjg7veh3utq27vlno1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:73081067599:android:9cd551123e16437c1af23a",
         "android_client_info": {
           "package_name": "com.example.maplord"
@@ -22,19 +59,19 @@
           }
         },
         {
+          "client_id": "73081067599-douh8ggmh6vm4dork7qope55nn3d26l0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.maplord",
+            "certificate_hash": "a1c725f4f84a27f6a8272d1d755e5e40991a5522"
+          }
+        },
+        {
           "client_id": "73081067599-g5p27lgn45rrbvkh7j3fhqtt5oo7squf.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.maplord",
             "certificate_hash": "8098b4bcfa0538f5886d1ebfb2fb2c1d9af6f626"
-          }
-        },
-        {
-          "client_id": "73081067599-vnnm6aod1qb7nj4tklm4vatc96cuaosu.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.maplord",
-            "certificate_hash": "a1c725f4f84a27f6a8272d1d755e5e40991a5522"
           }
         },
         {

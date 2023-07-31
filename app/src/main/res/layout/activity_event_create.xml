@@ -61,7 +61,7 @@
         android:layout_below="@+id/text_view_map_description"
         android:background="@color/purple_200" />
 
-    <com.example.maplord.components.MapDisplay
+    <com.example.findmyfriends.components.MapDisplay
         android:id="@+id/map_display"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -2,7 +2,7 @@
 
 ### Launching the app in Android Studio emulator
 
-1. Make sure the API is running (the `MapLordApi` project).
+1. Make sure the API is running (the `FindMyFriends` project).
 2. Open this project in Android Studio.
 3. Launch the `app` configuration in 'run' or 'debug' mode.
 

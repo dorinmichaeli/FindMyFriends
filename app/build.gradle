@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.maplord'
+    namespace 'com.example.findmyfriends'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.maplord"
+        applicationId "com.example.findmyfriends"
         minSdk 26
         targetSdk 33
         versionCode 1
@@ -44,7 +44,6 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.6.0'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
-    implementation 'com.google.firebase:firebase-auth:22.0.0'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -61,13 +60,13 @@ dependencies {
     // ** FIREBASE
     // ****************************************************
     // Import the BoM for the Firebase platform
-    implementation platform('com.google.firebase:firebase-bom:32.1.0')
+    implementation platform('com.google.firebase:firebase-bom:32.2.0')
     // Declare the dependencies for the desired Firebase products without specifying versions
     // For example, declare the dependencies for Firebase Authentication and Cloud Firestore
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
     // TODO: Are all of these needed?
-    implementation 'com.google.android.gms:play-services-auth:20.5.0'
+    implementation 'com.google.android.gms:play-services-auth:20.6.0'
     implementation 'com.google.android.gms:play-services-plus:17.0.0'
     implementation 'com.google.android.gms:play-services-identity:18.0.1'
 }

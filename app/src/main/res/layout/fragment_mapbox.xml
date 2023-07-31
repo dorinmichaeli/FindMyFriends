@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".fragments.MapboxFragment">
 
-    <com.example.maplord.components.MapDisplay
+    <com.example.findmyfriends.components.MapDisplay
         android:id="@+id/map_display"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.MapLord" parent="Theme.Material3.DayNight">
+    <style name="Theme.FindMyFriends" parent="Theme.Material3.DayNight">
 <!--        &lt;!&ndash; Primary brand color. &ndash;&gt;-->
 <!--        <item name="colorPrimary">@color/purple_500</item>-->
 <!--        <item name="colorPrimaryVariant">@color/purple_700</item>-->
@@ -14,12 +14,12 @@
 <!--        &lt;!&ndash; Customize your theme here. &ndash;&gt;-->
     </style>
 
-    <style name="Theme.MapLord.NoActionBar">
+    <style name="Theme.FindMyFriends.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.MapLord.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.FindMyFriends.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.MapLord.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.FindMyFriends.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
