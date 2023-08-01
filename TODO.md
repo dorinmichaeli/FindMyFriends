@@ -2,9 +2,9 @@
 
 ## Tasks
 
-- Create group functionality. A user should be able to create a group and let other users join it by
+- (DONE) Create group functionality. A user should be able to create a group and let other users join it by
   giving them the id.
-- Add group template for social events. A group template should contain predetermined markers set by
+- (DONE) Add group template for social events. A group template should contain predetermined markers set by
   the creator of the template. When creating a group from a template, the markers should be added
   to the group. These markers will have a different color, and no user will be able to remove them.
 
@@ -28,7 +28,7 @@
 ## Secondary tasks
 
 - (DONE) Find out how to change the app's name and icon in the apps view in the device.
-- Think about how we can emulate/simulate multiple devices for field testing. Do we need to get
+- (DONE) Think about how we can emulate/simulate multiple devices for field testing. Do we need to get
   multiple old Android devices or something?
 
 - (N/A) Fix back navigation from MapboxFragment not working.
