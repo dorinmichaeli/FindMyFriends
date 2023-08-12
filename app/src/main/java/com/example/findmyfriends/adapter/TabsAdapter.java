@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.example.findmyfriends.fragments.BtChatFragment;
 import com.example.findmyfriends.fragments.MapboxFragment;
 import com.example.findmyfriends.fragments.GroupFragment;
 import com.example.findmyfriends.fragments.ChatFragment;
@@ -13,6 +14,7 @@ public class TabsAdapter extends FragmentStateAdapter {
   private final MapboxFragment mapboxFragment;
   private final ChatFragment chatFragment;
   private final GroupFragment groupFragment;
+  private final BtChatFragment btChatFragment;
 
   public TabsAdapter(@NonNull FragmentActivity fragmentActivity) {
     super(fragmentActivity);
@@ -20,6 +22,7 @@ public class TabsAdapter extends FragmentStateAdapter {
     mapboxFragment = new MapboxFragment();
     chatFragment = new ChatFragment();
     groupFragment = new GroupFragment();
+    btChatFragment = new BtChatFragment();
   }
 
   @NonNull
@@ -32,6 +35,8 @@ public class TabsAdapter extends FragmentStateAdapter {
         return chatFragment;
       case 2:
         return groupFragment;
+      case 3:
+        return btChatFragment;
       default:
         throw new IllegalArgumentException("Invalid position");
     }
@@ -39,6 +44,6 @@ public class TabsAdapter extends FragmentStateAdapter {
 
   @Override
   public int getItemCount() {
-    return 3;
+    return 4;
   }
 }

@@ -43,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
           case 2:
             tab.setText("Group");
             break;
+          case 3:
+            tab.setText("\uD83D\uDCF6");
+            break;
         }
       }).attach();
   }
