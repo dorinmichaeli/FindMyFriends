@@ -4,9 +4,16 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Ask permission to access the device's location. Will be used together with Mapbox. -->
+    <!-- Permissions to access the device's location. Will be used together with Mapbox. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- Permissions to use Bluetooth. -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
         android:name=".App"
@@ -56,6 +63,9 @@
 
         <activity
             android:name=".activities.MainActivity"
+            android:theme="@style/Theme.FindMyFriends.NoActionBar" />
+        <activity
+            android:name=".activities.DeviceListActivity"
             android:theme="@style/Theme.FindMyFriends.NoActionBar" />
 
     </application>

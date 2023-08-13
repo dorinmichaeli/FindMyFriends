@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.findmyfriends.fragments.BtChatFragment;
+import com.example.findmyfriends.fragments.BluetoothChatFragment;
 import com.example.findmyfriends.fragments.MapboxFragment;
 import com.example.findmyfriends.fragments.GroupFragment;
 import com.example.findmyfriends.fragments.ChatFragment;
@@ -14,7 +14,7 @@ public class TabsAdapter extends FragmentStateAdapter {
   private final MapboxFragment mapboxFragment;
   private final ChatFragment chatFragment;
   private final GroupFragment groupFragment;
-  private final BtChatFragment btChatFragment;
+  private final BluetoothChatFragment btChatFragment;
 
   public TabsAdapter(@NonNull FragmentActivity fragmentActivity) {
     super(fragmentActivity);
@@ -22,7 +22,7 @@ public class TabsAdapter extends FragmentStateAdapter {
     mapboxFragment = new MapboxFragment();
     chatFragment = new ChatFragment();
     groupFragment = new GroupFragment();
-    btChatFragment = new BtChatFragment();
+    btChatFragment = new BluetoothChatFragment();
   }
 
   @NonNull

@@ -22,7 +22,7 @@ public class PermissionsActivity extends AppCompatActivity {
 
     locationService = App.get(this).getLocationService();
 
-    locationService.requestLocationPermissions(this, fineLocationPermissionGranted -> {
+    locationService.requestLocationAndBluetoothPermissions(this, fineLocationPermissionGranted -> {
       if (!fineLocationPermissionGranted) {
         locationService.showFatalDialogLocationPermissionMissing();
         return;

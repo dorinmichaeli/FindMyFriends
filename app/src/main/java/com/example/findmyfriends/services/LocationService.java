@@ -2,6 +2,7 @@ package com.example.findmyfriends.services;
 
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.util.Log;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -71,25 +72,30 @@ public class LocationService {
       .fatalError(app.getString(R.string.location_permission_denied_exit_message));
   }
 
-  public void requestLocationPermissions(AppCompatActivity activity, Consumer<Boolean> callback) {
+  public void requestLocationAndBluetoothPermissions(AppCompatActivity activity, Consumer<Boolean> callback) {
     requestPermissions(
       activity,
       new String[]{
+        android.Manifest.permission.BLUETOOTH,
+        android.Manifest.permission.BLUETOOTH_SCAN,
+        android.Manifest.permission.BLUETOOTH_ADVERTISE,
+        android.Manifest.permission.BLUETOOTH_CONNECT,
+        android.Manifest.permission.BLUETOOTH_ADMIN,
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
         android.Manifest.permission.ACCESS_FINE_LOCATION,
       },
       result -> {
         // Permission request process has completed.
 
-        // Check if the user has granted fine location access.
-        Boolean fineLocationGranted = result
-          .getOrDefault(android.Manifest.permission.ACCESS_FINE_LOCATION, false);
-
-        if (fineLocationGranted == null) {
-          // Treat null as false.
-          fineLocationGranted = false;
+        boolean allGranted = true;
+        for (Map.Entry<String, Boolean> entry : result.entrySet()) {
+          if (!entry.getValue()) {
+            allGranted = false;
+            break;
+          }
         }
 
-        callback.accept(fineLocationGranted);
+        callback.accept(allGranted);
       }
     );
   }
