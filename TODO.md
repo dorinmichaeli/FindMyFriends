@@ -58,3 +58,7 @@
 ## Links of possible interest
 
 - https://developer.android.com/codelabs/nearby-connections#0
+
+## Final Touches
+
+- Get rid of the MANAGE ACCOUNT button.

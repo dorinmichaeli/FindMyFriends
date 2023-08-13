@@ -38,7 +38,7 @@ import okhttp3.WebSocketListener;
 public class ApiService {
   private static final String TAG = "WsApiService";
   private static final int WEBSOCKET_PING_INTERVAL_MS = 5_000;
-  private static final int WEBSOCKET_RECONNECT_ATTEMPT_INTERVAL_MS = 3_000;
+  private static final int WEBSOCKET_RECONNECT_ATTEMPT_INTERVAL_MS = 5_000;
   private static final int CHAT_MESSAGES_MAX_BACKLOG = 100;
 
   private final String websocketUrl;

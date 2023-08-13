@@ -42,6 +42,8 @@ public class App extends Application {
     restApiService = new RestApiService(getString(R.string.findmyfriends_rest_api_url), userService);
   }
 
+  private int connectionErrorCount = 0;
+
   public void initApiService(String authToken, String groupId) {
     apiService = new ApiService(
       getString(R.string.findmyfriends_api_url),
@@ -56,8 +58,12 @@ public class App extends Application {
     apiService.onError(err -> {
       Log.d(Tag, "API error: " + err.getMessage());
       currentActivity.runOnUiThread(() -> {
-        String errorMessage = "Connection error, trying to reconnect...";
-        dialogService.snackbar(errorMessage);
+        if (connectionErrorCount % 5 == 0) {
+          // Show a snackbar every 5th error.
+          String errorMessage = "Connection error, trying to reconnect...";
+          dialogService.snackbar(errorMessage);
+        }
+        connectionErrorCount++;
       });
     });
   }
