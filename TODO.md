@@ -61,4 +61,4 @@
 
 ## Final Touches
 
-- Get rid of the MANAGE ACCOUNT button.
+- (DONE) Get rid of the MANAGE ACCOUNT button.
