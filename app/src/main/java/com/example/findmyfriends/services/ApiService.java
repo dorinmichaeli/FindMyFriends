@@ -35,6 +35,9 @@ import okhttp3.Request;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 
+/**
+ * WebSocket API.
+ */
 public class ApiService {
   private static final String TAG = "WsApiService";
   private static final int WEBSOCKET_PING_INTERVAL_MS = 5_000;

@@ -41,8 +41,10 @@ public class MapDisplay extends MapView {
   // We use this map to find the marker info for a given annotation.
   // This is used when deleting an annotation, as we need to know the
   // marker's id in order to delete it from the server.
+  // [find marker id from annotation]
   private final HashMap<PointAnnotation, AnnotationInfo> annotationMap = new HashMap<>();
   // We use this map to find the annotation for a given marker id.
+  // [find annotation from marker id]
   private final HashMap<String, AnnotationInfo> markerIdMap = new HashMap<>();
 
   private PointAnnotationManager pointAnnotationManager;
