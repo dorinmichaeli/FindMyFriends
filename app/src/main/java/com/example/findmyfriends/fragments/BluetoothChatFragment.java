@@ -98,16 +98,6 @@ public class BluetoothChatFragment extends Fragment {
    */
   private BluetoothChatService mChatService = null;
 
-//  @Override
-//  public void onCreate(Bundle savedInstanceState) {
-//    super.onCreate(savedInstanceState);
-//    setHasOptionsMenu(true);
-
-//  private String secureConnect;
-//  private String insecureConnect;
-//  private String discoverable;
-//  private boolean isSpinnerInitial = true;
-
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -132,26 +122,6 @@ public class BluetoothChatFragment extends Fragment {
       Intent serverIntent = new Intent(requireContext(), DeviceListActivity.class);
       startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
     });
-
-//    secureConnect = getResources().getText(R.string.secure_connect).toString();
-//    insecureConnect = getResources().getText(R.string.insecure_connect).toString();
-//    discoverable = getResources().getText(R.string.discoverable).toString();
-
-    //get the spinner from the xml.
-//    Spinner dropdown = binding.btDropdownList;
-//    //create a list of items for the spinner.
-//    String[] items = new String[]{
-//      secureConnect,
-//      insecureConnect,
-//      discoverable,
-//    };
-//    //create an adapter to describe how the items are displayed, adapters are used in several places in android.
-//    //There are multiple variations of this, but this is the basic variant.
-//    ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, items);
-//    //set the spinners adapter to the previously created one.
-//    dropdown.setAdapter(adapter);
-////    dropdown.setSelection(0, false);
-//    dropdown.setOnItemClickListener(this::onItemSelected);
 
     return binding.getRoot();
   }
@@ -196,12 +166,6 @@ public class BluetoothChatFragment extends Fragment {
       }
     }
   }
-
-//  @Override
-//  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-//                           @Nullable Bundle savedInstanceState) {
-//    return inflater.inflate(R.layout.fragment_bluetooth_chat, container, false);
-//  }
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -434,62 +398,4 @@ public class BluetoothChatFragment extends Fragment {
     // Attempt to connect to the device
     mChatService.connect(device, secure);
   }
-
-//  public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
-////    if (isSpinnerInitial) {
-////      isSpinnerInitial = false;
-////      return;
-////    }
-//
-//    String item = (String) adapterView.getItemAtPosition(pos);
-//    if (item.equals(secureConnect)) {
-//      // Launch the DeviceListActivity to see devices and do scan
-//      Intent serverIntent = new Intent(requireContext(), DeviceListActivity.class);
-//      startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
-//      return;
-//    }
-//
-//    if (item.equals(insecureConnect)) {
-//      // Launch the DeviceListActivity to see devices and do scan
-//      Intent serverIntent = new Intent(requireContext(), DeviceListActivity.class);
-//      startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
-//      return;
-//    }
-//
-//    if (item.equals(discoverable)) {
-//      // Ensure this device is discoverable by others
-//      ensureDiscoverable();
-//      return;
-//    }
-//  }
-
-//  @Override
-//  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-//    inflater.inflate(R.menu.bluetooth_chat, menu);
-//  }
-//
-//  @Override
-//  public boolean onOptionsItemSelected(MenuItem item) {
-//    switch (item.getItemId()) {
-//      case R.id.secure_connect_scan: {
-//        // Launch the DeviceListActivity to see devices and do scan
-//        Intent serverIntent = new Intent(getActivity(), DeviceListActivity.class);
-//        startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
-//        return true;
-//      }
-//      case R.id.insecure_connect_scan: {
-//        // Launch the DeviceListActivity to see devices and do scan
-//        Intent serverIntent = new Intent(getActivity(), DeviceListActivity.class);
-//        startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
-//        return true;
-//      }
-//      case R.id.discoverable: {
-//        // Ensure this device is discoverable by others
-//        ensureDiscoverable();
-//        return true;
-//      }
-//    }
-//    return false;
-//  }
-
 }
