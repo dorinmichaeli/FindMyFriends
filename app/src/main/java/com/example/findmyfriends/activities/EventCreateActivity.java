@@ -67,6 +67,9 @@ public class EventCreateActivity extends AppCompatActivity {
     });
   }
 
+  /**
+   * Move the map view to the user's current location.
+   */
   private void initCameraLocation() {
     Location location = locationService.getLastKnownLocation();
     Point newCameraLocation = Point.fromLngLat(location.getLongitude(), location.getLatitude());

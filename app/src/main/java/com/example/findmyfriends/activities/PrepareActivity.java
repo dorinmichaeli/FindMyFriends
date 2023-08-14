@@ -30,7 +30,6 @@ public class PrepareActivity extends AppCompatActivity {
     dialogService = App.get(this).getDialogService();
     userService = App.get(this).getUserService();
 
-    // TODO: This should be done in a better way.
     userService.getAuthToken().addOnCompleteListener(task -> {
       if (!task.isSuccessful()) {
         runOnUiThread(() -> {
@@ -41,6 +40,7 @@ public class PrepareActivity extends AppCompatActivity {
 
       App.get(this).initApiService(task.getResult(), groupId);
       ApiService apiService = App.get(this).getApiService();
+
       apiService.onConnectedToServer(() -> {
         welcomeMessageReceived = true;
         checkIfEverythingFinished();

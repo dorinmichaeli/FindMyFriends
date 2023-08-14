@@ -44,6 +44,7 @@ public class GroupCreateActivity extends AppCompatActivity {
           return;
         }
 
+        // Copy the id of the newly created group to the clipboard.
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("groupId", newGroup.groupId);
         clipboard.setPrimaryClip(clip);
